@@ -4,7 +4,7 @@
 
 # Incluye, AISI 1010, Cobre puro
 
-export kₘ , C ,Tₘₑₜ, ρₘ 
+
 
 # Conductividad de metales en W/mk
 kₘ = Dict();

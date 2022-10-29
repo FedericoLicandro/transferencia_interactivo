@@ -1,3 +1,7 @@
-using Test
+using  SafeTestsets
 
-@test true
+@safetestset "Material iteration tests" begin
+
+    include("test_interfaces/materials.jl")
+    
+end

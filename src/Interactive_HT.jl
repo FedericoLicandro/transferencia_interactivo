@@ -1,5 +1,7 @@
 module Interactive_HT
 
-greet() = print("Hello World!")
+include("Interfaces/Materials.jl")
+using Reexport
+@reexport using.Materials
 
 end # module Interactive_HT

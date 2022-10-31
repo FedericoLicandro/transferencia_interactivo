@@ -98,7 +98,7 @@ struct Metal <:AbstractSolid
     α::Real
 
     
-    function Metal(ρ,C,k)
+    function Metal(ρ::Real,C::Real,k::Real)
         
         @assert min(ρ,C,k) > 0 throw("Properties must be positive real numbers")
         new(ρ,C,k,k/(ρ*C*1000))

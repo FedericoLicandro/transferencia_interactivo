@@ -1,5 +1,8 @@
 module Convection_geometry
 
+export Pp_wall, Cf_cilinder, Il_pipe_array, Qu_pipe_array, CircularPipe, Duct
+export AbstractSurface, AbstractPipeArray, AbstractPipe
+
 "Surfaces used for convection heat exchange"
 abstract type AbstractSurface end
 
@@ -48,16 +51,16 @@ struct Duct <:AbstractPipe
     l ::Real
 end
 
-pipe_length(x::AbstractPipe) = x.l
-char_length(x::AbstractSurface) = x.Lc
-char_length(x::Duct) = 4*x.a
-cilinder_angle(x::Cf_cilinder) = x.φ
-array_St(x::AbstractPipeArray) = x.Sₜ
-array_SL(x::AbstractPipeArray) = x.Sₗ
-array_NL(x::AbstractPipeArray) = x.Nₗ
-quaxy_sd(x::Qu_pipe_array) = (x.Sₗ^2+(x.Sₜ/2)^2)^0.5
-char_speed(x::AbstractSurface,v) = abs(v)
-char_speed(x::Il_pipe_array) = abs(v)*(x.Sₜ/(x.Sₜ-x.Lc))
-char_speed(x::Qu_pipe_array) = abs(v)*max(x.Sₜ/(x.Sₜ-x.Lc),x.Sₜ/(2*(quaxy_sd(x)-x.Lc)))
+pipe_length(x::AbstractPipe) = x.l;
+char_length(x::AbstractSurface) = x.Lc;
+char_length(x::Duct) = 4*x.a;
+cilinder_angle(x::Cf_cilinder) = x.φ;
+array_St(x::AbstractPipeArray) = x.Sₜ;
+array_SL(x::AbstractPipeArray) = x.Sₗ;
+array_NL(x::AbstractPipeArray) = x.Nₗ;
+quaxy_sd(x::Qu_pipe_array) = (x.Sₗ^2+(x.Sₜ/2)^2)^0.5;
+char_speed(x::AbstractSurface,v) = abs(v);
+char_speed(x::Il_pipe_array) = abs(v)*(x.Sₜ/(x.Sₜ-x.Lc));
+char_speed(x::Qu_pipe_array) = abs(v)*max(x.Sₜ/(x.Sₜ-x.Lc),x.Sₜ/(2*(quaxy_sd(x)-x.Lc)));
 
 end

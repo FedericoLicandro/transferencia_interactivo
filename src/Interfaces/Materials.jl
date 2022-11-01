@@ -5,6 +5,7 @@ module Materials
 export AbstractMaterial, AbstractSolid, AbstractFluid, Metal, Gas, Liquid
 export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta , props , get_props
 
+
 include("Materials/metals.jl")
 include("Materials/fluids.jl")
 
@@ -32,8 +33,7 @@ function interpolate(name::String,T::Real,d::Dict,Tₘₑₜ=Tₘₑₜ)
 
         return (dₕ-dₗ)/(Tₕ-Tₗ)*(T-Tₗ) + dₗ
     else        
-        error("Material is not available, possible codenmaes are:
-                $codenames")        
+        error("Material is not available, check keys(Tₘₑₜ) for correct definition of metallic materials.")        
     end
 end   
 
@@ -70,8 +70,7 @@ function ρ_solid(name::String,ρₘ=ρₘ)
     if name ∈ codenames
         return ρₘ[name]
     else
-        error("Material is not available, possible codenmaes are:
-                $codenames")
+        error("Material is not available, check keys(Tₘₑₜ) for correct definition of metallic materials.")
     end
 end
 
@@ -207,7 +206,7 @@ struct Gas <:AbstractFluid
     function Gas(k,ν,Pr,β)
 
         @assert min(Pr,ν,k) > 0 throw("Properties must be positive real numbers")
-        new(k,ν,Pr,β)
+        new(k,Pr,ν,β)
     end
 
 end
@@ -228,7 +227,7 @@ function Gas(name,T)::Gas
     ν = ν_fluid(name,T)
     β = β_fluid(name,T)
 
-    return Gas(k,ν,Pr,β)
+    return Gas(k,Pr,ν,β)
 
 end
 
@@ -251,15 +250,15 @@ Liquido personalizado, asignando una a una las propiedades del liquido
 "
 struct Liquid <:AbstractFluid
     k  ::Real
+    Pr ::Real
     ν  ::Real
     β  ::Real
-    Pr ::Real
 
     
     function Liquid(k,ν,Pr,β)
 
         @assert min(Pr,ν,k) > 0 throw("Properties must be positive real numbers")
-        new(k,ν,Pr,β)
+        new(k,Pr,ν,β)
     end
 end
 

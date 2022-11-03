@@ -13,7 +13,7 @@ names = keys(Tₘₑₜ);
 names_fl = keys(Tₗᵤ);
 
 
-function interpolate(name::String,T::Real,d::Dict,Tₘₑₜ=Tₘₑₜ)
+function interprops(name::String,T::Real,d::Dict,Tₘₑₜ=Tₘₑₜ)
     
     codenames = keys(Tₘₑₜ)
     if name ∈ codenames
@@ -51,14 +51,14 @@ abstract type AbstractSolid  <:AbstractMaterial end
 Los solidos posibles son:
 
 $names"
-k_solid(name::String,T=300,kₘ=kₘ)= interpolate(name,T,kₘ)
+k_solid(name::String,T=300,kₘ=kₘ)= interprops(name,T,kₘ)
 
 "Interpola linealmente el calor específico de un solido en las tablas de la bibliografía en función de la temperatura.
 
 Los solidos posibles son:
 
 $names"
-C_solid(name::String,T=300,C=C)= interpolate(name,T,C)
+C_solid(name::String,T=300,C=C)= interprops(name,T,C)
 
 "Densidad de un solido según la bibliografía.
 
@@ -148,14 +148,14 @@ abstract type AbstractFluid <:AbstractMaterial end
 Los fluidos posibles son:
 
 $names_fl"
-k_fluid(name::String,T=300,kₗ=kₗ) = interpolate(name,T,kₗ,Tₗᵤ)
+k_fluid(name::String,T=300,kₗ=kₗ) = interprops(name,T,kₗ,Tₗᵤ)
 
 "Interpola linealmente la viscocidad cinemática de un fluido en las tablas de la bibliografía en función de la temperatura.
 
 Los fluidos posibles son:
 
 $names_fl"
-ν_fluid(name::String,T=300,νₗ=νₗ) = interpolate(name,T,νₗ,Tₗᵤ)
+ν_fluid(name::String,T=300,νₗ=νₗ) = interprops(name,T,νₗ,Tₗᵤ)
 
 
 "Interpola linealmente el número de Prandlt de un fluido en las tablas de la bibliografía en función de la temperatura.
@@ -163,7 +163,7 @@ $names_fl"
 Los fluidos posibles son:
 
 $names_fl"
-Pr_fluid(name::String,T=300,Pr=Pr) = interpolate(name,T,Pr,Tₗᵤ)
+Pr_fluid(name::String,T=300,Pr=Pr) = interprops(name,T,Pr,Tₗᵤ)
 
 
 "Interpola linealmente el coeficiente volumétrico de expansión térmica de un fluido en las tablas de la bibliografía en función de la temperatura.

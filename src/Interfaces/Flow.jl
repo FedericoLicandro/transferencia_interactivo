@@ -48,7 +48,7 @@ module Flow
             if re < 200000
                 return Eφ*0.21*re^0.62*pr^0.38*(pr/prₛ)^0.25  
             end
-            
+        end    
 
     end
 

@@ -248,7 +248,7 @@ Liquido personalizado, asignando una a una las propiedades del liquido
     β: (1/ρ)(∂ρ/∂T)ₚ (coeficiente volumétrico de expansión termica) en 1/K 
 
 "
-struct Liquid <:AbstractFluid
+Base.@kwdef struct Liquid <:AbstractFluid
     k  ::Real
     Pr ::Real
     ν  ::Real

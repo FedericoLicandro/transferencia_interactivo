@@ -1,7 +1,9 @@
+
+
 module Flow
     
-    include("Convection_geometry.jl")
-    include("Materials.jl")
+using Interactive_HT.Materials
+using Interactive_HT.Convection_geometry
 
     function intervec(value::Float64,v1::Vector{Float64},v2::Vector{Float64})::Float64
         i = 1
@@ -17,9 +19,10 @@ module Flow
         return v*L/ν
     end
 
-    function nusselt(wall::Pp_wall,v::Real,fluid::AbstractFluid)::Real
+    function nusselt(wall::Wall,v::Real,fluid::AbstractFluid)::Real
+        
         re=reynolds(wall,v,fluid)
-        pr=prandlr(fluid)
+        pr=prandlt(fluid)
         if re < 500000
             @assert 0.6 < pr throw("Prandlt out of range")
             return (0.664*re^0.5)*pr^0.33
@@ -34,7 +37,7 @@ module Flow
     end
     
 
-    function nusselt(cilinder::Cf_cilinder,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)
+    function nusselt(cilinder::Cilinder,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)
         θ  = [90,80,70,60,50,40,30,20,10];
         EΨ = [1,1,0.98,0.94,0.88,0.78,0.67,0.52,0.42];
         φ = cilinder_angle(cilinder)

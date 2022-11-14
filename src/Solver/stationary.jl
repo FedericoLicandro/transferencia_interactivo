@@ -1,7 +1,34 @@
 using Gridap
 using WriteVTK
 
-n = 100
+#=
+function _addbcrecangle(BC::RectBC,lab::Gridap.Geometry.FaceLabeling)
+
+
+end
+function _heateqsolve_stationary(HTp::HTproblem;n=100)
+    L=HTp.geo.length    
+    h=HTp.geo.height
+    domain = (0,L,0,h)
+    model = CartesianDiscreteModel(domain, (n,n))
+    labels = get_face_labeling(model)
+    BC = HTp.BC
+    north = BC.north; east  = BC.east; south = BC.south; west  = BC.west
+    gₙ = north.g ;  gₛ = south.g ;  gₒ = west.g ;  gₑ = east.g
+    Nₙ = north.label; Nₛ = south.label; Nₒ = west.label; Nₑ = east.label
+    BCvec = [west,north,east,south]
+    newmanntags
+    for bc in BCvec
+    end
+
+
+
+
+end
+
+=#
+
+n=100
 domain = (0,1,0,2)
 partition = (n,n)
 

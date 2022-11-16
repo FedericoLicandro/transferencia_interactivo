@@ -52,3 +52,5 @@ struct RectBC  <:AbstractBCGroup
     west ::BCond 
 end
 
+f(x)=x
+bc = BCond(f,"name",Dirichlet())

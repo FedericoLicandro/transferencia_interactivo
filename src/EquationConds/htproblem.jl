@@ -1,9 +1,9 @@
 include("boundary.jl")
 include("../Geometry/geo.jl")
-using Interctive_HT.Materials
+using Interactive_HT.Materials
 
 
-struct HTproblem{G<:AbstractHTGeometry, S<:AbstractSolid,B::AbstractBCGroup}
+struct HTproblem{G<:AbstractHTGeometry, S<:AbstractSolid,B<:AbstractBCGroup}
     geo::G
     mat::S
     BC ::B

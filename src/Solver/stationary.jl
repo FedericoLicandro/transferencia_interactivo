@@ -49,7 +49,7 @@ end
 
 # toy problem
 Cu = Metal("Cu",300)
-D = RectangularDomain(1,1)
+D  = RectangularDomain(1,1)
 source(x) = 0
 g1(x) = 0
 g2(x) = 1-x[2]

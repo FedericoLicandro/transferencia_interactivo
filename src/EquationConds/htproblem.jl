@@ -4,14 +4,34 @@ include("boundary.jl")
 include("../Geometry/geo.jl")
 using Interactive_HT.Materials
 
+"
+Defined Heat transfer problem.
 
+### fields
+
+- `geo`: Geometry in which the Heat Transfer problem is solved
+
+- `mat`: Material occupying the domain
+
+- `BC`: Group of boundary conditions
+
+- `f`: source term of the equation (-`kΔT`= `f`)
+
+"
 struct HTproblem{G<:AbstractHTGeometry, S<:AbstractSolid,B<:AbstractBCGroup}
-    geo::G
-    mat::S
-    BC ::B
-    f  ::Function
+    geo :: G
+    mat :: S
+    BC  :: B
+    f   :: Function
 end
 
+
+"
+Returns fields of a Heat Transfer problem `k` (conductivity) , `L` (length) , `h` (height) , `f` (source term)
+
+returns `[k,L,h,f]`
+
+"
 function _get_data(HTp::HTproblem)
     k=HTp.mat.k
     L=HTp.geo.length    
@@ -22,6 +42,12 @@ function _get_data(HTp::HTproblem)
     return data
 end
 
+"
+Returns the boundary conditions of a heat transfer problem
+
+returns `[south,north,west,east]`
+
+"
 function _get_boundaries(HTp::HTproblem)
     BC=HTp.BC
     north = BC.north; east  = BC.east; south = BC.south; west  = BC.west
@@ -29,6 +55,13 @@ function _get_boundaries(HTp::HTproblem)
 end
 
 
+"
+
+Returns the triangulation `Ω` and its measure `dΩ`, test space for the finite element method `Vₕ`, and Trial space `Ug`  of a discretemodel 
+
+returns `[Ω, dΩ, Vₕ, Ug]`
+
+"
 function _triangulate_domain(model::CartesianDiscreteModel,order::Int64,degree::Int64,dt::Vector{String},df::Vector{Any}) 
     reffe = ReferenceFE(lagrangian,Float64,order)
     Vₕ = TestFESpace(model,reffe,conformity=:H1,dirichlet_tags=dt)

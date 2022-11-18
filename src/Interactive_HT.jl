@@ -1,11 +1,17 @@
 module Interactive_HT
 
-include("Interfaces/Materials.jl")
-using Reexport
-@reexport using.Materials
+using Gridap,
+    Reexport,
+    WriteVTK
 
-include("Interfaces/Flow.jl")
-@reexport using.Flow
+include("Geometry/geo.jl")
+include("Materials/Materials.jl")
+@reexport using ..Materials
 
+include("EquationConds/boundary.jl")
+include("EquationConds/htproblem.jl")
+include("Geometry/convsurfaces.jl")
+include("Convection/Flow.jl")
+include("Convection/Convection.jl")
 
 end # module Interactive_HT

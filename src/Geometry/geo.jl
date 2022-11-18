@@ -1,6 +1,6 @@
 abstract type AbstractHTGeometry end
 
-"
+"""
 type containig rectangular geometry for cartesian problems.
 
 ### fields
@@ -8,13 +8,13 @@ type containig rectangular geometry for cartesian problems.
 - `height`: height of the cylinder.
 - `length`: length of the cylinder.   
 
-"
-struct RectangularDomain <:AbstractHTGeometry
+"""
+struct RectangularDomain <: AbstractHTGeometry
     height::Real
     length::Real
 end
 
-"
+"""
 type containig cylindrical geometry for axicymetrical problems.
 
 ### fields
@@ -22,8 +22,8 @@ type containig cylindrical geometry for axicymetrical problems.
 - `radius`: radius of the cylinder.
 - `length`: length of the cylinder.
 
-"
-struct Cylider2D <:AbstractHTGeometry
+"""
+struct Cylider2D <: AbstractHTGeometry
     radius::Real
     length::Real
 end

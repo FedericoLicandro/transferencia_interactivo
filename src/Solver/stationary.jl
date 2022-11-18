@@ -43,7 +43,7 @@ function _heateqsolve_stationary(HTp::HTproblem;n=100,order=1, degree = 2)
 
         uₕ = solve(solver,op)
     
-    return [Ω , uₕ]
+    return [Ω,uₕ]
 
 end
 

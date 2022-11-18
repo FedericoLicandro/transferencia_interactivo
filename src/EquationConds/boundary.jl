@@ -24,10 +24,10 @@ Boundary condition type.
 
 
 "
-struct BCond{T<:AbstractBCond} <:AbstractBCond
-    g::Function
+struct BCond{T<:AbstractBCond}
+    g    ::Function
     label::String
-    type::T
+    type ::T
 end
 
 
@@ -57,9 +57,18 @@ end
 f(x)=x
 bc = BCond(f,"name",Dirichlet())
 
+"
+Checks if the boundary condition `BC` is of the `Newmann` type
 
+"
 _is_newmman(BC::BCond) = BC.type == Newmann()
 
+
+"returns a vector containig the boundary condition function of the four faces of a rectangular domain
+
+returns `[gₛ,gₙ,gₒ,gₑ]`
+
+"
 function _get_functions_from_boundaries(BCvec::Vector{T},k::Real) where T<:Union{AbstractBCond,BCond,BCond{Newmann},BCond{Dirichlet}}
     south,north,west,east = BCvec
     auxn = north.g; auxs = south.g; auxw = west.g; auxe = east.g
@@ -70,7 +79,12 @@ function _get_functions_from_boundaries(BCvec::Vector{T},k::Real) where T<:Union
     return [gₛ,gₙ,gₒ,gₑ]
 end
 
+"
+Adds face labeling from boundary condition labels.
 
+`labels` is modifyied after this function.
+
+"
 function _add_tags_from_bc!(labels::Gridap.Geometry.FaceLabeling,BC::Vector{T}) where T<:Union{AbstractBCond,BCond,BCond{Newmann},BCond{Dirichlet}}
     i=1
     for bc in BC
@@ -79,7 +93,11 @@ function _add_tags_from_bc!(labels::Gridap.Geometry.FaceLabeling,BC::Vector{T}) 
     end
 end
 
+"
+Separetes the functions inside a vector in two vectors `df` and `nf`, depending on the type of the boundary condition.
 
+returns `[df,nf]` (Dirichlet functions), (Newmann functions)
+"
 function _classify_functions(fvec::Vector{Function},BC::Vector{T}) where T<:Union{AbstractBCond,BCond,BCond{Newmann},BCond{Dirichlet}}
     
     df = Function[]; nf = []
@@ -98,7 +116,17 @@ function _classify_functions(fvec::Vector{Function},BC::Vector{T}) where T<:Unio
     
 end
 
+" Separetes labels of a boundary condition vector depending on their type 
 
+`dt` contains Dirchelt labels
+
+`nt` contains Newmann labels.
+
+when a BC is of the Dirichlet type, adds `''empty''` to the `nt` vector.
+
+returns `[dt,nt]`
+
+"
 function _build_tags(BC::Vector{T}) where T<:Union{AbstractBCond,BCond,BCond{Newmann},BCond{Dirichlet}}
     dt = String[]; nt = String[]
     for bc in BC
@@ -114,6 +142,12 @@ function _build_tags(BC::Vector{T}) where T<:Union{AbstractBCond,BCond,BCond{New
 
 end
 
+
+"
+Calculates measures for the boundaries where Newmann condition is applied.
+
+`dΓ` is built taking in consideration how `_heateqsolve_stationary` is solved, including values for the 4 boundaries even if their condition is of the Dirichelt Type.
+"
 function _newmann_boundary(Ω::Triangulation, model::CartesianDiscreteModel, degree::Int64, nt::Vector{String})
     dΓ = []
     for i in eachindex(nt)

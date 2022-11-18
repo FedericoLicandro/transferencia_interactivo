@@ -7,15 +7,19 @@
 
 
 # Conductividad de metales en W/mk
+"Dictionary containig conductivity of metals"
 kₘ = Dict();
 
 # Calor específico metales en kJ/kgK
+"Dictionary containig heat constant of metals"
 C = Dict();
 
 # Temperaturas de evaluación de props en K
+"Dictionary containig temperature range of metals"
 Tₘₑₜ = Dict();
 
 # Densidad en kg/m³
+"Dictionary containig density of metals"
 ρₘ = Dict();
 
 # Propiedades en función de la temperatura; la primera entrada del diccionario indica el material, la segunda la temperatura en K

@@ -7,18 +7,23 @@
 export kₗ, νₗ, Pr, Tₗ, β
 
 # Conductividad de fluidos en W/mk
+"Dictionary containig conductivity of fluids"
 kₗ = Dict();
 
 # Viscocidad cinemática de fluidos en m²/s
+"Dictionary containig cinematic viscocity of fluids"
 νₗ = Dict();
 
 # Número de Prandlt
+"Dictionary containig Prandlt number of fluids"
 Pr = Dict();
 
 # Temperaturas de evaluación de props en K
+"Dictionary containig temperature range of fluids properties"
 Tₗᵤ = Dict();
 
 # Coef β en 1/K
+"Dictionary containig volumétrico coefficient of thermal expansion of fluids "
 βₗ = Dict();
 
 # Propiedades en función de la temperatura; la primera entrada del diccionario indica el material, la segunda la temperatura en K

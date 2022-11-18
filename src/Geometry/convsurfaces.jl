@@ -1,8 +1,6 @@
-module Convection_geometry
 
-    export Wall, Cilinder, Il_pipe_array, Qu_pipe_array, CircularPipe, Duct
-    export AbstractSurface, AbstractPipeArray, AbstractPipe
-    export pipe_length, char_length, cilinder_angle, array_NL, array_SL, array_St, quaxy_sd, char_speed
+
+
 
     "Surfaces used for convection heat exchange"
     abstract type AbstractSurface end
@@ -14,7 +12,7 @@ module Convection_geometry
     end
 
     "Cilinder with crossed flow, characteristic length is the cilinders diameter"
-    Base.@kwdef struct Cilinder <:AbstractSurface
+    Base.@kwdef struct Cylinder <:AbstractSurface
         Lc :: Real
         φ  :: Real = 90
     end
@@ -64,7 +62,7 @@ module Convection_geometry
     inclination(x::Wall) = x.φ
 
     "Returns relative flow direction of a Cilinder object"
-    cilinder_angle(x::Cilinder) = x.φ;
+    cylinder_angle(x::Cylinder) = x.φ;
 
     "Returns the Sₜ field of an AbstractPipeArray type object"
     array_St(x::AbstractPipeArray) = x.Sₜ;
@@ -79,8 +77,6 @@ module Convection_geometry
     quaxy_sd(x::Qu_pipe_array) = (x.Sₗ^2+(x.Sₜ/2)^2)^0.5;
 
     "Calculates the characteristic speed of an AbstractSurface type object"
-    char_speed(x::AbstractSurface,v) = abs(v);
-    char_speed(x::Il_pipe_array) = abs(v)*(x.Sₜ/(x.Sₜ-x.Lc));
-    char_speed(x::Qu_pipe_array) = abs(v)*max(x.Sₜ/(x.Sₜ-x.Lc),x.Sₜ/(2*(quaxy_sd(x)-x.Lc)));
-
-end
+    char_speed(x::Any,v::Real) = abs(v);
+    char_speed(x::Il_pipe_array,v::Real) = abs(v)*(x.Sₜ/(x.Sₜ-x.Lc));
+    char_speed(x::Qu_pipe_array,v::Real) = abs(v)*max(x.Sₜ/(x.Sₜ-x.Lc),x.Sₜ/(2*(quaxy_sd(x)-x.Lc)));

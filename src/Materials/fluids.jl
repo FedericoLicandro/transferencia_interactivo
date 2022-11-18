@@ -4,7 +4,7 @@
 
 # Incluye, Aire, Agua
 
-export kₗ, νₗ, Pr, Tₗ, β
+export kₗ, νₗ, Pr, Tₗᵤ, β
 
 # Conductividad de fluidos en W/mk
 "Dictionary containig conductivity of fluids"

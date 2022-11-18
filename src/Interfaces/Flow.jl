@@ -1,9 +1,22 @@
 
 
 module Flow
-    
+
+export Film, Correction
+export intervec, reynolds, nusselt
+export pipe_length, char_length, inclination, cylinder_angle, array_St, array_SL, array_NL, quaxy_sd, char_speed
+export AbstractSurface, AbstractPipeArray, AbstractPipe
+export Wall, Cylinder, Il_pipe_array, Qu_pipe_array, CircularPipe, Duct
+
+include("../Geometry/convsurfaces.jl")
+
+
+
 using Interactive_HT.Materials
-using Interactive_HT.Convection_geometry
+
+struct Film end
+struct Correction end
+
 
     function intervec(value::Float64,v1::Vector{Float64},v2::Vector{Float64})::Float64
         i = 1
@@ -37,7 +50,7 @@ using Interactive_HT.Convection_geometry
     end
     
 
-    function nusselt(cilinder::Cilinder,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)
+    function nusselt(cylinder::Cylinder,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
         θ  = [90,80,70,60,50,40,30,20,10];
         EΨ = [1,1,0.98,0.94,0.88,0.78,0.67,0.52,0.42];
         φ = cilinder_angle(cilinder)

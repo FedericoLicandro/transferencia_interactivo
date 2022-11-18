@@ -4,7 +4,7 @@ module Materials
 
 export AbstractMaterial, AbstractSolid, AbstractFluid, Metal, Gas, Liquid
 export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta , props , get_props
-
+export kₗ, νₗ, Pr, Tₗᵤ, β, kₘ, C, Tₘₑₜ, ρₘ
 
 include("../Materials/metals.jl")
 include("../Materials/fluids.jl")
@@ -175,7 +175,7 @@ function β_fluid(name::String,T=300,βₗ=βₗ)
    if βₗ[name] == "gas"
         return 1/T
    else
-        interpolate(name,T,βₗ,Tₗᵤ)
+        interprops(name,T,βₗ,Tₗᵤ)
    end
 end
 
@@ -198,15 +198,16 @@ Gas personalizado, asignando una a una las propiedades del gas
     
     "
 struct Gas <:AbstractFluid
-    k  ::Real
-    ν  ::Real
-    Pr ::Real
-    β  ::Real
+    k    ::Real
+    ν    ::Real
+    Pr   ::Real
+    β    ::Real
+    name ::String
 
-    function Gas(k,ν,Pr,β)
+    function Gas(k,ν,Pr,β,name)
 
         @assert min(Pr,ν,k) > 0 throw("Properties must be positive real numbers")
-        new(k,Pr,ν,β)
+        new(k,Pr,ν,β,name)
     end
 
 end
@@ -226,8 +227,9 @@ function Gas(name,T)::Gas
     Pr = Pr_fluid(name,T)
     ν = ν_fluid(name,T)
     β = β_fluid(name,T)
+    named = name
 
-    return Gas(k,Pr,ν,β)
+    return Gas(k,Pr,ν,β,named)
 
 end
 
@@ -249,16 +251,17 @@ Liquido personalizado, asignando una a una las propiedades del liquido
 
 "
 Base.@kwdef struct Liquid <:AbstractFluid
-    k  ::Real
-    Pr ::Real
-    ν  ::Real
-    β  ::Real
+    k    ::Real
+    Pr   ::Real
+    ν    ::Real
+    β    ::Real
+    name ::String
 
     
-    function Liquid(k,ν,Pr,β)
+    function Liquid(k,ν,Pr,β,name)
 
         @assert min(Pr,ν,k) > 0 throw("Properties must be positive real numbers")
-        new(k,Pr,ν,β)
+        new(k,Pr,ν,β,name)
     end
 end
 
@@ -277,8 +280,9 @@ function Liquid(name,T)::Liquid
     Pr = Pr_fluid(name,T)
     ν = ν_fluid(name,T)
     β = β_fluid(name,T)
+    named = name
 
-    return Liquid(k,ν,Pr,β)
+    return Liquid(k,ν,Pr,β,named)
 
 end
 
@@ -289,6 +293,9 @@ conductividad(x::AbstractMaterial) = x.k
 
 "Devuelve la viscocidad cinemática del fluido x en m²/s"
 viscocidad(x::AbstractFluid) = x.ν
+
+""
+_get_fluid_name(x::AbstractFluid) = x.name
 
 "Número de Prandlt del fluido x"
 prandlt(x::AbstractFluid) = x.Pr
@@ -344,6 +351,6 @@ get_props(x::AbstractSolid) = _get_props_sol(x)
 get_props(x::AbstractFluid) = _get_props_flu(x)
 
 
-g=Gas(1,1,1,1)
+
 
 end

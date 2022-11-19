@@ -3,46 +3,45 @@
 module Materials
 
 export AbstractMaterial, AbstractSolid, AbstractFluid, Metal, Gas, Liquid
-export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta , props , get_props
+export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta, props, get_props
 export kₗ, νₗ, Pr, Tₗᵤ, β, kₘ, C, Tₘₑₜ, ρₘ
 
-include("../Materials/metals.jl")
-include("../Materials/fluids.jl")
+include("metals.jl")
+include("fluids.jl")
 
-names = keys(Tₘₑₜ);
-names_fl = keys(Tₗᵤ);
+names = keys(Tₘₑₜ)
+names_fl = keys(Tₗᵤ)
 
+function interprops(name::String, T::Real, d::Dict, Tₘₑₜ=Tₘₑₜ)
 
-function interprops(name::String,T::Real,d::Dict,Tₘₑₜ=Tₘₑₜ)
-    
     codenames = keys(Tₘₑₜ)
     if name ∈ codenames
         Table_Temp = Tₘₑₜ[name]
-        Tₑ= extrema(Table_Temp)
-            @assert Tₑ[1] ≤ T ≤ Tₑ[2] throw("Temperature is out of range for the selected material")
+        Tₑ = extrema(Table_Temp)
+        @assert Tₑ[1] ≤ T ≤ Tₑ[2] throw("Temperature is out of range for the selected material")
         index = 1
-    
-        while Table_Temp[index]  < T
+
+        while Table_Temp[index] < T
             index = index + 1
         end
 
         Tₗ = Table_Temp[index-1]
         Tₕ = Table_Temp[index]
-        dₕ = d[name,Tₕ]
-        dₗ = d[name,Tₗ]
+        dₕ = d[name, Tₕ]
+        dₗ = d[name, Tₗ]
 
-        return (dₕ-dₗ)/(Tₕ-Tₗ)*(T-Tₗ) + dₗ
-    else        
-        throw("Material is not available, check keys(Tₘₑₜ) for correct definition of metallic materials.")        
+        return (dₕ - dₗ) / (Tₕ - Tₗ) * (T - Tₗ) + dₗ
+    else
+        throw("Material is not available, check keys(Tₘₑₜ) for correct definition of metallic materials.")
     end
-end   
+end
 
 
 "Tipo que engloba a todos los materiales posibles"
 abstract type AbstractMaterial end
 
 "Tipo que engloba a todos los solidos posibles"
-abstract type AbstractSolid  <:AbstractMaterial end
+abstract type AbstractSolid <: AbstractMaterial end
 
 
 
@@ -51,21 +50,21 @@ abstract type AbstractSolid  <:AbstractMaterial end
 Los solidos posibles son:
 
 $names"
-k_solid(name::String,T=300,kₘ=kₘ)= interprops(name,T,kₘ)
+k_solid(name::String, T=300, kₘ=kₘ) = interprops(name, T, kₘ)
 
 "Interpola linealmente el calor específico de un solido en las tablas de la bibliografía en función de la temperatura.
 
 Los solidos posibles son:
 
 $names"
-C_solid(name::String,T=300,C=C)= interprops(name,T,C)
+C_solid(name::String, T=300, C=C) = interprops(name, T, C)
 
 "Densidad de un solido según la bibliografía.
 
 Los solidos posibles son:
 
 $names"
-function ρ_solid(name::String,ρₘ=ρₘ)
+function ρ_solid(name::String, ρₘ=ρₘ)
     codenames = keys(ρₘ)
     if name ∈ codenames
         return ρₘ[name]
@@ -89,19 +88,19 @@ Metal personalizado, asignando una a una las propiedades del metal
     k: Condictividad térmica del metal en W/mºC
 
     "
-struct Metal <:AbstractSolid
-    
-    ρ::Real 
+struct Metal <: AbstractSolid
+
+    ρ::Real
     C::Real
     k::Real
     α::Real
 
-    
-    function Metal(ρ::Real,C::Real,k::Real)
-        
-        @assert min(ρ,C,k) > 0 throw("Properties must be positive real numbers")
-        new(ρ,C,k,k/(ρ*C*1000))
-    
+
+    function Metal(ρ::Real, C::Real, k::Real)
+
+        @assert min(ρ, C, k) > 0 throw("Properties must be positive real numbers")
+        new(ρ, C, k, k / (ρ * C * 1000))
+
     end
 
 end
@@ -113,23 +112,23 @@ A partir de su temperatura y su nombre codigo, tomando las propiedades de la bib
     Name: Nombre codigo del metal
 
     T: Temperatura del metal en K
-"    
-function Metal(name,T)::Metal
+"
+function Metal(name, T)::Metal
 
     ρ = ρ_solid(name)
-    k = k_solid(name,T)
-    C = C_solid(name,T)
+    k = k_solid(name, T)
+    C = C_solid(name, T)
 
-    return Metal(ρ,C,k)
+    return Metal(ρ, C, k)
 end
 
 
 function _props_sol(x::AbstractSolid)
-    
-    ρ =densidad(x)
+
+    ρ = densidad(x)
     k = conductividad(x)
-    C = trunc(Calor_esp(x),digits=3)
-    
+    C = trunc(Calor_esp(x), digits=3)
+
     println("Propiedades:")
     println("============")
     println("ρ  | $ρ kg/m³")
@@ -140,7 +139,7 @@ end
 
 
 "Tipo que engloba a todos los fluidos posibles"
-abstract type AbstractFluid <:AbstractMaterial end
+abstract type AbstractFluid <: AbstractMaterial end
 
 
 "Interpola linealmente la conductividad de un fluido en las tablas de la bibliografía en función de la temperatura.
@@ -148,14 +147,14 @@ abstract type AbstractFluid <:AbstractMaterial end
 Los fluidos posibles son:
 
 $names_fl"
-k_fluid(name::String,T=300,kₗ=kₗ) = interprops(name,T,kₗ,Tₗᵤ)
+k_fluid(name::String, T=300, kₗ=kₗ) = interprops(name, T, kₗ, Tₗᵤ)
 
 "Interpola linealmente la viscocidad cinemática de un fluido en las tablas de la bibliografía en función de la temperatura.
 
 Los fluidos posibles son:
 
 $names_fl"
-ν_fluid(name::String,T=300,νₗ=νₗ) = interprops(name,T,νₗ,Tₗᵤ)
+ν_fluid(name::String, T=300, νₗ=νₗ) = interprops(name, T, νₗ, Tₗᵤ)
 
 
 "Interpola linealmente el número de Prandlt de un fluido en las tablas de la bibliografía en función de la temperatura.
@@ -163,7 +162,7 @@ $names_fl"
 Los fluidos posibles son:
 
 $names_fl"
-Pr_fluid(name::String,T=300,Pr=Pr) = interprops(name,T,Pr,Tₗᵤ)
+Pr_fluid(name::String, T=300, Pr=Pr) = interprops(name, T, Pr, Tₗᵤ)
 
 
 "Interpola linealmente el coeficiente volumétrico de expansión térmica de un fluido en las tablas de la bibliografía en función de la temperatura.
@@ -171,12 +170,12 @@ Pr_fluid(name::String,T=300,Pr=Pr) = interprops(name,T,Pr,Tₗᵤ)
 Los fluidos posibles son:
 
 $names_fl"
-function β_fluid(name::String,T=300,βₗ=βₗ)  
-   if βₗ[name] == "gas"
-        return 1/T
-   else
-        interprops(name,T,βₗ,Tₗᵤ)
-   end
+function β_fluid(name::String, T=300, βₗ=βₗ)
+    if βₗ[name] == "gas"
+        return 1 / T
+    else
+        interprops(name, T, βₗ, Tₗᵤ)
+    end
 end
 
 
@@ -197,17 +196,17 @@ Gas personalizado, asignando una a una las propiedades del gas
     β: (1/ρ)(∂ρ/∂T) en 1/K
     
     "
-struct Gas <:AbstractFluid
-    k    ::Real
-    ν    ::Real
-    Pr   ::Real
-    β    ::Real
-    name ::String
+struct Gas <: AbstractFluid
+    k::Real
+    ν::Real
+    Pr::Real
+    β::Real
+    name::String
 
-    function Gas(k,ν,Pr,β,name)
+    function Gas(k, ν, Pr, β, name)
 
-        @assert min(Pr,ν,k) > 0 throw("Properties must be positive real numbers")
-        new(k,Pr,ν,β,name)
+        @assert min(Pr, ν, k) > 0 throw("Properties must be positive real numbers")
+        new(k, Pr, ν, β, name)
     end
 
 end
@@ -221,15 +220,15 @@ end
     T: Temperatura del gas en K
     
     "
-function Gas(name,T)::Gas
-    
-    k = k_fluid(name,T)
-    Pr = Pr_fluid(name,T)
-    ν = ν_fluid(name,T)
-    β = β_fluid(name,T)
+function Gas(name, T)::Gas
+
+    k = k_fluid(name, T)
+    Pr = Pr_fluid(name, T)
+    ν = ν_fluid(name, T)
+    β = β_fluid(name, T)
     named = name
 
-    return Gas(k,Pr,ν,β,named)
+    return Gas(k, Pr, ν, β, named)
 
 end
 
@@ -250,18 +249,18 @@ Liquido personalizado, asignando una a una las propiedades del liquido
     β: (1/ρ)(∂ρ/∂T)ₚ (coeficiente volumétrico de expansión termica) en 1/K 
 
 "
-Base.@kwdef struct Liquid <:AbstractFluid
-    k    ::Real
-    Pr   ::Real
-    ν    ::Real
-    β    ::Real
-    name ::String
+Base.@kwdef struct Liquid <: AbstractFluid
+    k::Real
+    Pr::Real
+    ν::Real
+    β::Real
+    name::String
 
-    
-    function Liquid(k,ν,Pr,β,name)
 
-        @assert min(Pr,ν,k) > 0 throw("Properties must be positive real numbers")
-        new(k,Pr,ν,β,name)
+    function Liquid(k, ν, Pr, β, name)
+
+        @assert min(Pr, ν, k) > 0 throw("Properties must be positive real numbers")
+        new(k, Pr, ν, β, name)
     end
 end
 
@@ -274,15 +273,15 @@ end
     T: Temperatura del liquido en K
     
     "
-function Liquid(name,T)::Liquid
-    
-    k = k_fluid(name,T)
-    Pr = Pr_fluid(name,T)
-    ν = ν_fluid(name,T)
-    β = β_fluid(name,T)
+function Liquid(name, T)::Liquid
+
+    k = k_fluid(name, T)
+    Pr = Pr_fluid(name, T)
+    ν = ν_fluid(name, T)
+    β = β_fluid(name, T)
     named = name
 
-    return Liquid(k,ν,Pr,β,named)
+    return Liquid(k, ν, Pr, β, named)
 
 end
 
@@ -313,12 +312,12 @@ densidad(x::AbstractSolid) = x.ρ
 diff_term(x::AbstractSolid) = x.α
 
 function _props_flu(x::AbstractFluid)
-    
-    ν =trunc(viscocidad(x),digits=8)
+
+    ν = trunc(viscocidad(x), digits=8)
     k = conductividad(x)
     Pr = prandlt(x)
     β = beta(x)
-    
+
     println("Propiedades:")
     println("============")
     println("ν  | $ν m²/s")
@@ -329,18 +328,18 @@ function _props_flu(x::AbstractFluid)
 end
 
 function _get_props_flu(x::AbstractFluid)
-    ν =trunc(viscocidad(x),digits=8)
+    ν = trunc(viscocidad(x), digits=8)
     k = conductividad(x)
     Pr = prandlt(x)
     β = beta(x)
-    return [k,ν,Pr,β]
+    return [k, ν, Pr, β]
 end
 
 function _get_props_sol(x::AbstractSolid)
-    ρ =densidad(x)
+    ρ = densidad(x)
     k = conductividad(x)
     C = Calor_esp(x)
-    return [ρ,k,C]
+    return [ρ, k, C]
 end
 
 

@@ -1,8 +1,16 @@
+
+export AbstractBCond, AbstractBCGroup, Dirichlet, Newmann
+export BCond, RectBC, CylBC
+export _is_newmman, _get_functions_from_boundaries, _add_tags_from_bc!, classify_functions, _newmann_boundary
+
+
 """Abstract type containing all Boundary condition types available."""
 abstract type AbstractBCond end
 
+"""Abstract type containing Boundary condition group types."""
 abstract type AbstractBCGroup end
 
+"""Abstract type containing Boundary condition group types."""
 struct Dirichlet <: AbstractBCond end
 struct Newmann <: AbstractBCond end
 
@@ -33,13 +41,17 @@ Boundary conditions for a Recatangular domain
 """
 struct RectBC <: AbstractBCGroup
     north::BCond
-    east::BCond
+    east ::BCond
     south::BCond
-    west::BCond
+    west ::BCond
 end
 
-f(x) = x
-bc = BCond(f, "name", Dirichlet())
+
+struct CylBC <: AbstractBCGroup
+    conds ::Vector{BCond}
+end
+
+
 
 """
 Checks if the boundary condition `BC` is of the `Newmann` type.
@@ -64,6 +76,8 @@ function _get_functions_from_boundaries(BCvec::Vector{T}, k::Real) where {T<:Uni
     gₑ(x) = _is_newmman(east) ? -auxe(x) / k : auxe(x)
     return [gₛ, gₙ, gₒ, gₑ]
 end
+
+
 
 """
 Adds face labeling from boundary condition labels.
@@ -135,7 +149,7 @@ Calculates measures for the boundaries where Newmann condition is applied.
 
 `dΓ` is built taking in consideration how `_heateqsolve_stationary` is solved, including values for the 4 boundaries even if their condition is of the Dirichelt Type.
 """
-function _newmann_boundary(Ω::Triangulation, model::CartesianDiscreteModel, degree::Int64, nt::Vector{String})
+function _newmann_boundary(Ω::Triangulation, model::DiscreteModel, degree::Int64, nt::Vector{String})
     dΓ = []
     for i in eachindex(nt)
         if nt[i] == "empty"

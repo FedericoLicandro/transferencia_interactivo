@@ -1,4 +1,10 @@
+
+using Interactive_HT, Gridap
+
+
 # toy problem
+
+
 Cu = Metal("Cu", 300)
 D = RectangularDomain(1, 1)
 source(x) = 0
@@ -17,7 +23,7 @@ toyproblem = HTproblem(D, Cu, bcA, source)
 
 uₕ = _heateqsolve_stationary(toyproblem)
 
-Ω = uₕ[1]
+Ω  = uₕ[1]
 uh = uₕ[2]
 
 writevtk(Ω, "results", cellfields=["uh" => uh])

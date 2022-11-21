@@ -1,3 +1,6 @@
+export HTproblem
+export _get_data, _get_boundaries, _triangulate_domain
+
 """
 Defined Heat transfer problem.
 
@@ -20,7 +23,7 @@ Returns fields of a Heat Transfer problem `k` (conductivity) , `L` (length) , `h
 
 returns `[k,L,h,f]`
 """
-function _get_data(HTp::HTproblem)
+function _get_data(HTp::HTproblem{RectangularDomain, Metal, RectBC})
     k = HTp.mat.k
     L = HTp.geo.length
     h = HTp.geo.height
@@ -29,6 +32,17 @@ function _get_data(HTp::HTproblem)
     data = [k, L, h, f]
     return data
 end
+
+function _get_data(HTp::HTproblem{Cylider2D, Metal, CylBC})
+    k = HTp.mat.k
+    L = HTp.geo.length
+    r = HTp.geo.radius
+    source = HTp.f
+    f(x) = source(x) / k
+    data = [k, L, r, f]
+    return data
+end
+
 
 """
 Returns the boundary conditions of a heat transfer problem.
@@ -53,7 +67,7 @@ Returns the triangulation `Ω` and its measure `dΩ`, test space for the finite 
 returns `[Ω, dΩ, Vₕ, Ug]`
 
 """
-function _triangulate_domain(model::CartesianDiscreteModel, order::Int64, degree::Int64, dt::Vector{String}, df::Vector{Any})
+function _triangulate_domain(model::DiscreteModel, order::Int64, degree::Int64, dt::Vector{String}, df::Vector{Any})
     reffe = ReferenceFE(lagrangian, Float64, order)
     Vₕ = TestFESpace(model, reffe, conformity=:H1, dirichlet_tags=dt)
     Ug = TrialFESpace(Vₕ, df)

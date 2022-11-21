@@ -1,4 +1,9 @@
+
+export AbstractHTGeometry, RectangularDomain, Cylider2D
+
 abstract type AbstractHTGeometry end
+
+
 
 """
 type containig rectangular geometry for cartesian problems.

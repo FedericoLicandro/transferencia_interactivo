@@ -39,12 +39,14 @@ abstract type AbstractPipe <: AbstractSurface end
 struct CircularPipe <: AbstractPipe
     Lc::Real
     l::Real
+    R::Real
 end
 
 "Quadrangular pipe geometry, characteristic length is four times the pipe wall length"
 struct Duct <: AbstractPipe
     a::Real
     l::Real
+    R::Real
 end
 
 "Returns the length field of a pipe object"
@@ -71,6 +73,9 @@ array_NL(x::AbstractPipeArray) = x.Nₗ;
 
 "Calculates the SD of an Qu_pipe_array object"
 quaxy_sd(x::Qu_pipe_array) = (x.Sₗ^2 + (x.Sₜ / 2)^2)^0.5;
+
+
+curvradius(x::AbstractPipe) = x.R
 
 "Calculates the characteristic speed of an AbstractSurface type object"
 char_speed(x::Any, v::Real) = abs(v);

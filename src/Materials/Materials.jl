@@ -133,7 +133,7 @@ function _props_sol(x::AbstractSolid)
     println("============")
     println("ρ  | $ρ kg/m³")
     println("k  | $k W/mk")
-    println("C  |  $C kJ/kgºC")
+    println("C  | $C kJ/kgºC")
 
 end
 
@@ -255,12 +255,13 @@ Base.@kwdef struct Liquid <: AbstractFluid
     ν::Real
     β::Real
     name::String
+    T::Real
 
 
-    function Liquid(k, ν, Pr, β, name)
+    function Liquid(k, ν, Pr, β, name, T)
 
-        @assert min(Pr, ν, k) > 0 throw("Properties must be positive real numbers")
-        new(k, Pr, ν, β, name)
+        @assert min(Pr, ν, k, T) > 0 throw("Properties must be positive real numbers")
+        new(k, Pr, ν, β, name, T)
     end
 end
 
@@ -280,8 +281,9 @@ function Liquid(name, T)::Liquid
     ν = ν_fluid(name, T)
     β = β_fluid(name, T)
     named = name
+    Temp = T
 
-    return Liquid(k, ν, Pr, β, named)
+    return Liquid(k, ν, Pr, β, named,Temp)
 
 end
 
@@ -298,6 +300,8 @@ _get_fluid_name(x::AbstractFluid) = x.name
 
 "Número de Prandlt del fluido x"
 prandlt(x::AbstractFluid) = x.Pr
+
+fluidtemp(x::AbstractFluid) = x.T
 
 "Coeficiente volumétrico de expansión térmica del fluido x en 1/K"
 beta(x::AbstractFluid) = x.β
@@ -332,7 +336,9 @@ function _get_props_flu(x::AbstractFluid)
     k = conductividad(x)
     Pr = prandlt(x)
     β = beta(x)
-    return [k, ν, Pr, β]
+    name = x.name
+    T = fluidtemp(x)
+    return [k, ν, Pr, β, name, T]
 end
 
 function _get_props_sol(x::AbstractSolid)

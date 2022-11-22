@@ -1,3 +1,4 @@
+
 struct Film end
 struct Correction end
 
@@ -10,7 +11,7 @@ function intervec(value::Float64, v1::Vector{Float64}, v2::Vector{Float64})::Flo
 end
 
 function intermat(value1,value2, v1::Vector{Float64}, v2::Vector{Float64},M::Matrix{Float64})
-    i = 1, j = 1
+    i = 1; j = 1
     while value1 ≥ v1[i]
         i = i + 1
     end

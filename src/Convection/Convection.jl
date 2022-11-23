@@ -1,7 +1,12 @@
+export Forced, Natural
+export _calculate_h, _interface_fluid, h_conv
+
 #module Convection
 
 struct Forced end
 struct Natural end
+
+
 
 _calculate_h(Nu::Real, L::Real, k::Real) = Nu * k / L
 
@@ -62,8 +67,10 @@ end
 
 function h_conv(v::Real, sup::AbstractSurface, flu::AbstractFluid, Tₛ::Real, ::Forced)
 
+    L = char_length(sup)
     flus = _interface_fluid(flu, Tₛ, Correction())
     V = char_speed(sup, v)
+    k = conductividad(flu)
     Nu = nusselt(sup, V, flu, flus)
     h = _calculate_h(Nu::Real, L::Real, k::Real)
 
@@ -75,7 +82,7 @@ end
 function h_conv(v::Real, sup::Wall, flu::AbstractFluid, T::Real, Tₛ::Real, ::Forced)
 
     fluf = _interface_fluid(flu, T, Tₛ, Film())
-    k = conductividad(flu)
+    k = conductividad(fluf)
     L = char_length(sup)
     V = char_speed(sup, v)
     Nu = nusselt(sup, V, fluf)

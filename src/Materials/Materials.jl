@@ -3,7 +3,7 @@
 module Materials
 
 export AbstractMaterial, AbstractSolid, AbstractFluid, Metal, Gas, Liquid
-export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta, props, get_props
+export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta, props, get_props, fluidtemp, _get_fluid_name
 export kₗ, νₗ, Pr, Tₗᵤ, β, kₘ, C, Tₘₑₜ, ρₘ
 
 include("metals.jl")
@@ -202,11 +202,12 @@ struct Gas <: AbstractFluid
     Pr::Real
     β::Real
     name::String
+    T::Real
 
-    function Gas(k, ν, Pr, β, name)
+    function Gas(k, ν, Pr, β, name, T)
 
-        @assert min(Pr, ν, k) > 0 throw("Properties must be positive real numbers")
-        new(k, Pr, ν, β, name)
+        @assert min(Pr, ν, k, T) > 0 throw("Properties must be positive real numbers")
+        new(k, Pr, ν, β, name, T)
     end
 
 end
@@ -227,8 +228,9 @@ function Gas(name, T)::Gas
     ν = ν_fluid(name, T)
     β = β_fluid(name, T)
     named = name
+    Temp = T
 
-    return Gas(k, Pr, ν, β, named)
+    return Gas(k, Pr, ν, β, named, Temp)
 
 end
 

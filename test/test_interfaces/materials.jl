@@ -11,15 +11,15 @@ using Test
     @test_throws "Temperature is out of range for the selected material" Metal("Cu",10)
 end
 
-@testset "Props aire" begin
+#@testset "Props aire" begin
     @test k_fluid("air",300) == 0.0263
     @test k_fluid("air",325) == 0.0263/2+ 0.0300/2
     @test ν_fluid("air",300) == 15.89*10^-6
-    @test ν_fluid("air",325) == (1/2)*15.89*10^-6 + (1/2)*20.29*10^-6
+    @test ν_fluid("air",325) == (1/2)*15.89*10^-6 + (1/2)*20.92*10^-6
     @test β_fluid("air",500) == 1/500
     @test_throws "Temperature is out of range for the selected material" Gas("air",1500)
     @test_throws "Temperature is out of range for the selected material" Gas("air",10)
-end
+#end
 
 @testset "Material definitions" begin
     @test Metal(8933,0.385,401.0) == Metal("Cu",300)

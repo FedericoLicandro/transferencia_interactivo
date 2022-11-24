@@ -4,7 +4,7 @@ struct Correction end
 
 function intervec(value::T, v1::Vector{S}, v2::Vector{D})::Float64 where T<:Number where S<:Number where D<:Number
     i = 1
-    while value ≤ v1[i]
+    while value < v1[i]
         i = i + 1
     end
     return (v2[i] - v2[i+1]) / (v1[i] - v1[i+1]) * (value - v1[i+1]) + v2[i+1]
@@ -30,7 +30,6 @@ function reynolds(surface::AbstractSurface, v::Real, fluid::AbstractFluid)::Real
     ν = viscocidad(fluid)
     L = char_length(surface)
     re = v * L / ν
-    println("Reynolds is ", re)
     return re
 end
 

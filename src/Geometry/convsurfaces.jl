@@ -18,7 +18,7 @@ end
 Base.@kwdef struct Cylinder <: AbstractSurface
     Lc::Real
     φ::Real = 90
-    function Cylinder(L::Real, φ = 90)
+    function Cylinder(L::Real; φ = 90)
         new(L,φ)        
     end
 end

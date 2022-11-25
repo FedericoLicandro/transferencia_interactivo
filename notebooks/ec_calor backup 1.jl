@@ -46,9 +46,9 @@ md""" ### Teoría """
 
 md"Se utiliza el metodo numérico de ''elementos finitos'' para resolver la ecuación de calor. El metodo se basa en buscar la solución $T=u_h$, que proyectada en un espacio de funciones V, minimiza la distancia con la solución real. El metodo de elementos finitos escapa el alcanze del curso, si el estudiante está interesado, se recomienda el estudio de métodos numéricos. Siguiendo el desarrollo de elementos finitos la forma débil de la ecuación de calor es:
 
-$$k\int_{Ω}  \nabla (k.u) .\nabla v \, dV  = \int_Ω f.v \, dV$$
+$$\int_{Ω}  \nabla (k.u) .\nabla v \, dV  = \int_Ω f.v \, dV$$
 
-Donde $u$ es la solución a la ecuación, $v$ pertenece al espacio de funciones $V$ (para mas información estudiar el metodo de elementos finitos), $k$ es la conductividad del material, $Ω$ es el dominio, $∂Ω$ su borde y $f$ el termino de generación de calor.
+Donde $u$ es la solución a la ecuación, $v$ pertenece al espacio de funciones $V$ (para mas información estudiar el metodo de elementos finitos), $k$ es la conductividad del material, $Ω$ es el dominio y $f$ el término de generación volumétrica de calor.
 
 El dominio se parte con una malla uniforme (es decir, espaciamiento equidistante entre puntos discretos a evaluar) y se construyen los elementos finitos (triángluos), tomando como vertices 3 puntos de la malla. La ecuación se resuelve para cada uno de los triángulos.
 
@@ -160,17 +160,14 @@ end
 # ╔═╡ 5eeb0a11-5ecc-4e49-85c9-a0eb6221c89a
 md""" Para visualizar los resultados se necesitan usar otros paquetes:"""
 
-# ╔═╡ 3bf22461-1d28-4b33-a618-cbabc4f93cba
-
-
 # ╔═╡ Cell order:
 # ╟─b4dcf993-33f9-42c4-a58d-a8ebfb51f788
-# ╟─d5cabce2-dead-4d31-903f-cc592826656d
+# ╠═d5cabce2-dead-4d31-903f-cc592826656d
 # ╟─08befdd8-8045-43de-b9f7-9bc02b3e9585
 # ╟─cef2cd71-5527-42f3-9df0-560efd392f37
 # ╟─9bf54786-4b32-438c-a996-a00693dfaa3d
 # ╟─0b5cc627-887c-45e4-9b84-e10a1c1aa384
-# ╟─7e383c93-07be-4828-81dd-a8646c38b229
+# ╠═7e383c93-07be-4828-81dd-a8646c38b229
 # ╟─068c4fb5-1344-4d94-95f5-12c50d38cd11
 # ╟─1762e3bb-21af-404e-867d-0580854e15e6
 # ╟─ac160f0a-4ea0-414f-b5c9-e1339e88bc08
@@ -198,5 +195,5 @@ md""" Para visualizar los resultados se necesitan usar otros paquetes:"""
 # ╟─0ab9c977-cf67-4579-bd5f-75086652bd26
 # ╠═3a2f0992-c4b8-4c81-84bc-e5731f4297e4
 # ╟─6e29bc20-68ab-46c1-82e2-cf0c95874173
-# ╠═5eeb0a11-5ecc-4e49-85c9-a0eb6221c89a
-# ╠═3bf22461-1d28-4b33-a618-cbabc4f93cba
+# ╟─5eeb0a11-5ecc-4e49-85c9-a0eb6221c89a
+# ╟─3bf22461-1d28-4b33-a618-cbabc4f93cba

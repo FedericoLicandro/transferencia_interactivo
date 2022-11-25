@@ -9,7 +9,7 @@ Solves the stationary (∂T/∂t = 0) heat equation for a rectangular domain, us
 - `degree`: Degree with which triangulation measures are calculated.
 returns in entry 1 the triangulation `Ω`, and in entry 2, the solution `uₕ`.
 """
-function _heateqsolve_stationary(HTp::HTproblem{RectangularDomain, Metal, RectBC}; n=100, order=1, degree=2)
+function _heateqsolve_stationary(HTp::HTproblem{RectangularDomain, Metal, RectBC}; n=20, order=1, degree=2)
 
     k, L, h, f = _get_data(HTp)
     domain = (0, L, 0, h)

@@ -1,22 +1,26 @@
 using Interactive_HT
 
-T = 550
-Tₛ= 700
-D = 0.4
-v = 15
-alg = Forced()
-name ="air"
-sup = Duct(D,b=D,l=50,R=2)
-flu = Gas(name,T)
-ν = viscocidad(flu)
-pr = prandlt(flu)
-k = conductividad(flu)
-prs = pr
+T = 295
+Tₛ= 283
+D = 0.01
+v = 10
+St = 0.02
+Sl = 0.06
+Nl = 6
+flu = Gas("air",T)
+sup = Qu_pipe_array(D,St,Sl,Nl)
 V = char_speed(sup,v)
-re = V*D/ν
-nu = (1+1.77*D/2)*0.021*re^0.8*pr^0.43*(pr/prs)^0.25
-h = k*nu/D
-struct Correction end
-flus = _interface_fluid(flu,Tₛ,Interactive_HT.Correction())
+h = h_conv(v,sup,flu,Tₛ,Forced())
 lD = 8/0.4
 #la wea qlfome
+
+Tw = 283
+Ts = 283
+vw = 0.35
+fluw =Liquid("agua",Tw)
+supw = CircularPipe(D,l=0.35,R=0)
+ν = viscocidad(fluw)
+re = vw*D/ν
+β = β_fluid("agua",Tw)
+gr = 9.8*β*abs(Tw-Ts)*D^3/ν^2
+h    = h_conv(vw,supw,fluw,Ts,Forced())

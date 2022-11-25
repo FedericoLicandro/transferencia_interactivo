@@ -1,3 +1,7 @@
+export Film, Correction
+export intervec, intermat
+export reynolds, grashoff, nusselt
+
 
 struct Film end
 struct Correction end
@@ -35,7 +39,7 @@ end
 
 function grashoff(fluid::AbstractFluid,Tₛ::Real,x::AbstractSurface)
     L = char_length(x)
-    k, ν, Pr, β, name, T = _get_props(fluid)
+    k, ν, Pr, β, name, T = get_props(fluid)
     gr = 9.8*β*abs(T-Tₛ)*L^3/ν^2
     return gr
 end

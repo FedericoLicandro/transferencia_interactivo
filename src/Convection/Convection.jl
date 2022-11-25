@@ -1,7 +1,23 @@
+
+
+module Convection
+
+using ..Materials
+
+include("../Geometry/convsurfaces.jl")
+include("flow.jl")
+
+
 export Forced, Natural
 export _calculate_h, _interface_fluid, h_conv
+export Film, Correction
+export intervec, intermat
+export reynolds, grashoff, nusselt
+export AbstractSurface, AbstractPipeArray, AbstractPipe
+export Wall, Cylinder, Il_pipe_array, Qu_pipe_array, CircularPipe, Duct
+export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed
 
-#module Convection
+
 
 struct Forced end
 struct Natural end
@@ -94,7 +110,7 @@ function h_conv(v::Real, sup::Wall, flu::AbstractFluid, T::Real, Tₛ::Real, ::F
 end
 
 
-#end
+end
 
 #= Toy example
 

@@ -9,18 +9,16 @@ using Gridap,
 
 import Gmsh:gmsh
 
-include("Geometry/geo.jl")
-include("Geometry/cylinder.jl")
+
 include("Materials/Materials.jl")
 @reexport using ..Materials
 
-include("EquationConds/boundary.jl")
-include("EquationConds/htproblem.jl")
-include("Geometry/convsurfaces.jl")
-include("Convection/Flow.jl")
-include("Convection/Convection.jl")
 
-include("Solver/stationarycyl.jl")
-include("Solver//stationaryrect.jl")
+include("Convection/Convection.jl")
+@reexport using ..Convection
+
+include("Solver/HeatEq.jl")
+@reexport using ..HeatEq
+
 
 end # module Interactive_HT

@@ -50,7 +50,7 @@ struct CircularPipe <: AbstractPipe
     Lc::Real
     l::Real
     R::Real
-    function CircularPipe(D::Real)
+    function CircularPipe(D::Real;l=50,R=0)
         new(D,50,0)
     end
 end

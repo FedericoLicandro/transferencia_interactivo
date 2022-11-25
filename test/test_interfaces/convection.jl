@@ -1,4 +1,5 @@
-using Interactive_HT
+using Interactive_HT.Convection
+using Interactive_HT.Materials
 using Test
 
 @testset "definición de superficies" begin

@@ -3,7 +3,27 @@ using Interactive_HT.Materials
 using Test
 
 @testset "definición de superficies" begin
+    @test Wall(1) == Wall(1,φ=0)
+    @test Cylinder(1) == Cylinder(1,φ=90)
+    @test CircularPipe(1) == CircularPipe(1,l=50,R=0)
+    @test Duct(1,b=1,l=50,R=0) == Duct(1)
+end
 
+@testset "reynolds criticos" begin
+    @test regime(Wall(1),500001) == "turbulent"
+    @test regime(Wall(1),499999) == "laminar"
+    @test regime(Cylinder(1),9) == "laminar"
+    @test regime(Cylinder(1),11) == "turbulentlow"
+    @test regime(Cylinder(1),999) == "turbulentlow"
+    @test regime(Cylinder(1),1001) == "turbulenthigh"
+    @test regime(Il_pipe_array(1,1,1,1),9) == "laminar"
+    @test regime(Il_pipe_array(1,1,1,1),11) == "turbulentlow"
+    @test regime(Qu_pipe_array(1,1,1,1),99) == "turbulentlow"
+    @test regime(Il_pipe_array(1,1,1,1),101) == "turbulentmed"
+    @test regime(Qu_pipe_array(1,1,1,1),999) == "turbulentmed"
+    @test regime(Qu_pipe_array(1,1,1,1),1001) == "turbulenthigh"
+    @test regime(Il_pipe_array(1,1,1,1),199999) == "turbulenthigh"
+    @test regime(Qu_pipe_array(1,1,1,1),200001) == "turbulenthigher"
 end
 
 @testset "Formulas de convección" begin

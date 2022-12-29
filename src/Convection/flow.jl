@@ -1,5 +1,5 @@
 export Film, Correction
-export intervec, intermat
+export intervec, intermat, regime
 export reynolds, grashoff, nusselt
 
 

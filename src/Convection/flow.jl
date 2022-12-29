@@ -37,6 +37,27 @@ function reynolds(surface::AbstractSurface, v::Real, fluid::AbstractFluid)::Real
     return re
 end
 
+function regime(wall::Wall,re::Real)
+    re < 500000 ? reg = "laminar" : reg = "turbulent"
+    return reg
+end
+
+function regime(cyl::Cylinder,re::Real)
+    re < 10 ? reg = "laminar" : re < 1000 ? reg = "turbulentlow" : reg = "turbulenthigh"
+    return reg
+end
+
+function regime(pipea::AbstractPipeArray,re::Real)
+    re < 10 ? reg = "laminar" : re < 100 ? reg = "turbulentlow" : re < 1000 ? reg = "turbulentmed" : re < 200000 ? reg = "turbulenthigh" : reg = "turbulenthigher"
+    return reg
+end
+
+function regime(pipe::AbstractPipe,re::Real)
+    re < 2000 ? reg = "laminar" : re<10000 ? reg = "transition" : reg="turbulent"
+    return reg
+end
+
+
 function grashoff(fluid::AbstractFluid,Tₛ::Real,x::AbstractSurface)
     L = char_length(x)
     k, ν, Pr, β, name, T = get_props(fluid)

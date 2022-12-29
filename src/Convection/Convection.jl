@@ -10,7 +10,7 @@ include("flow.jl")
 
 export Forced, Natural
 export _calculate_h, _interface_fluid, h_conv
-export Film, Correction
+export Film, Correction, ForcedConv
 export intervec, intermat
 export reynolds, grashoff, nusselt
 export AbstractSurface, AbstractPipeArray, AbstractPipe
@@ -109,15 +109,37 @@ function h_conv(v::Real, sup::Wall, flu::AbstractFluid, T::Real, Tₛ::Real, ::F
 
 end
 
+struct ForcedConv
+
+    flu::AbstractFluid
+    sup::AbstractSurface
+    T::Real
+    Tₛ::Real
+    Re::Real
+    Gr::Real
+    Nu::Real
+    h::Real
+
+    function ForcedConv(sup::AbstractSurface,T::Real,Tₛ::Real,v::Real,fluname::String)
+        flu₁ = Fluid(fluname,T)
+        fluₛ = Fluid(fluname,Tₛ)
+        V = char_speed(sup,v)
+        typeof(sup) == Wall ? flu = _interface_fluid(flu₁,T,Tₛ,Film()) : flu = flu₁
+        Re = reynolds(sup,V,flu)
+        Gr = grashoff(flu,Tₛ,sup)
+        if typeof(sup) == Wall
+            Nu = nusselt(sup, V, flu)
+        else
+            Nu = nusselt(sup,V,flu,fluₛ)
+        end
+        k = conductividad(flu)
+        L = char_length(sup)
+        h = Nu*k/L
+        new(flu,sup,T,Tₛ,Re,Gr,Nu,h)
+    end
 
 end
 
-#= Toy example
 
-T = 288
-flu = Gas("air",T)
-sup = Wall(0.5,90)
-Tₛ = 299
-v = 0.5
-h_conv(v,sup,flu,T,Tₛ,Forced())
-=#
+end
+

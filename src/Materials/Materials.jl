@@ -2,8 +2,8 @@
 
 module Materials
 
-export AbstractMaterial, AbstractSolid, AbstractFluid, Metal, Gas, Liquid
-export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta, props, get_props, fluidtemp, _get_fluid_name
+export AbstractMaterial, AbstractSolid, AbstractFluid, Metal, Gas, Liquid, Fluid
+export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta, props, get_props, fluidtemp, _get_fluid_name, _is_liquid
 export kₗ, νₗ, Pr, Tₗᵤ, β, kₘ, C, Tₘₑₜ, ρₘ
 
 include("metals.jl")
@@ -278,16 +278,28 @@ end
     "
 function Liquid(name, T)::Liquid
 
-    k = k_fluid(name, T)
+    k  = k_fluid(name, T)
     Pr = Pr_fluid(name, T)
-    ν = ν_fluid(name, T)
-    β = β_fluid(name, T)
+    ν  = ν_fluid(name, T)
+    β  = β_fluid(name, T)
     named = name
-    Temp = T
+    Temp  = T
 
     return Liquid(k, ν, Pr, β, named,Temp)
 
 end
+
+function _is_liquid(name::String,dict=βₗ):Bool
+    cond = (dict[name]=="liquid")
+    return cond
+end
+
+function Fluid(name::String,T::Real)
+    @assert name ∈ keys(Tₗᵤ)  throw("Name is not a valid fluid")
+    _is_liquid(name) ? flu=Liquid(name,T) : flu=Gas(name,T)
+    return flu
+end
+
 
 # Algunas funciones aplicables a materiales
 

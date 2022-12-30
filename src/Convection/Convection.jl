@@ -10,6 +10,7 @@ include("flow.jl")
 
 export Forced, Natural
 export _calculate_h, _interface_fluid, h_conv
+export iterateh
 export Film, Correction, ForcedConv
 export intervec, intermat
 export reynolds, grashoff, nusselt
@@ -83,7 +84,7 @@ function _interface_fluid(flu::Gas, Tₛ::Real, ::Correction)
 end
 
 
-function h_conv(v::Real, sup::AbstractSurface, flu::AbstractFluid, Tₛ::Real, ::Forced)
+function h_conv(v::Real, sup::AbstractSurface, flu::AbstractFluid, Tₛ::Real)
 
     L  = char_length(sup)
     flus = _interface_fluid(flu, Tₛ, Correction())
@@ -97,7 +98,7 @@ function h_conv(v::Real, sup::AbstractSurface, flu::AbstractFluid, Tₛ::Real, :
 end
 
 
-function h_conv(v::Real, sup::Wall, flu::AbstractFluid, T::Real, Tₛ::Real, ::Forced)
+function h_conv(v::Real, sup::Wall, flu::AbstractFluid, T::Real, Tₛ::Real)
 
     fluf = _interface_fluid(flu, T, Tₛ, Film())
     k  = conductividad(fluf)
@@ -165,5 +166,21 @@ function regime(x::ForcedConv)
     reg = regime(sup)
     return reg
 end
+
+
+function iterateh(sup::AbstractSurface,flu₁::AbstractFluid,flu₂::AbstractFluid,v₁::Real,v₂::Real;tol=0.01)
+    T₁ = fluidtemp(flu₁) ; T₂ = fluidtemp(flu₂)
+    Tₛ = (T₁ + T₂)/2 
+    ϵ = 1 ; h₁ = 0 ; h₂ = 0
+    while ϵ ≥ tol
+        h₁ = h_conv(v₁,sup,flu₁,Tₛ)
+        h₂ = h_conv(v₂,sup,flu₂,Tₛ)
+        Tₛᵃ = Tₛ
+        Tₛ = (h₁*T₁+h₂*T₂)/(h₂+h₁)
+        ϵ = abs(Tₛ-Tₛᵃ)
+    end
+    return [h₁,h₂,Tₛ]    
+end
+
 
 end

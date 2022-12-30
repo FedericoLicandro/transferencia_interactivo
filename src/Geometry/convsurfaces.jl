@@ -98,5 +98,5 @@ curvradius(x::AbstractPipe) = x.R
 
 "Calculates the characteristic speed of an AbstractSurface type object"
 char_speed(x::Any, v::Real) = abs(v);
-char_speed(x::Il_pipe_array, v::Real) = abs(v) * (x.Sₜ / (x.Sₜ - x.Lc));
+char_speed(x::Il_pipe_array, v::Real) = abs(v) * (x.Sₜ /(x.Sₜ-x.Lc));
 char_speed(x::Qu_pipe_array, v::Real) = abs(v) * max(x.Sₜ / (x.Sₜ - x.Lc), x.Sₜ / (2 * (quaxy_sd(x) - x.Lc)));

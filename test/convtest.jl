@@ -1,11 +1,13 @@
 using Interactive_HT
 
-L   = 1;
-sup = Wall(L)
+T₁ = 300
+T₂ = 350
+flu₁ = Gas("air",T₁)
+flu₂ = Liquid("agua",T₂)
+v₁ = 0.5
+v₂ = 0.5
+D = 0.03
+sup = Cylinder(D)
+ϵ = 0.00001
 
-name = "agua"
-v    = -2
-T    = 300
-Tₛ    = 320
-
-conv = ForcedConv(sup,T,Tₛ,v,name)
+hs = iterateh(sup,flu₁,flu₂,v₁,v₂,tol=ϵ)

@@ -266,7 +266,7 @@ function nusselt(cylinder::Cylinder,v::Real,fluid::AbstractFluid,fluidₛ::Abstr
     end
 
 end
-function nusselt(ilpipe::Il_pipe_array,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
+function nusselt(ilpipe::Ilpipearray,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
     Cₙ = [0.99,0.98,0.97,0.95,0.92,0.9,0.86,0.8,0.7]
     n  = [16,13,10,7,5,4,3,2,1]
     Nₗ = array_NL(ilpipe)
@@ -299,7 +299,7 @@ function nusselt(ilpipe::Il_pipe_array,v::Real,fluid::AbstractFluid,fluidₛ::Ab
     return nu
 
 end
-function nusselt(ilpipe::Qu_pipe_array,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
+function nusselt(ilpipe::Qupipearray,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
     Cₙ = [0.99,0.98,0.97,0.95,0.92,0.89,0.84,0.76,0.64]
     n  = [16,13,10,7,5,4,3,2,1]
     Nₗ = array_NL(ilpipe)

@@ -16,7 +16,7 @@ export intervec, intermat
 export reynolds, grashoff, nusselt, arquimedes
 export surface, regime, nusselt, reynolds, grashoff
 export AbstractSurface, AbstractPipeArray, AbstractPipe
-export Wall, Cylinder, Il_pipe_array, Qu_pipe_array, CircularPipe, Duct, ForcedConv
+export Wall, Cylinder, Ilpipearray, Qupipearray, CircularPipe, Duct, ForcedConv
 export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed
 
 

@@ -138,7 +138,7 @@ md""" Cantidad de lineas de tubos $Nₗ$"""
 @bind Nₗ Slider(2:20, default = 10, show_value = true)
 
 # ╔═╡ 593f61a1-6808-4c9d-a6c2-ce70348e4dd9
-banco = Il_pipe_array(Dᵦ,Sₜ,Sₗ,Nₗ)
+banco = Ilpipearray(Dᵦ,Sₜ,Sₗ,Nₗ)
 
 # ╔═╡ 0c45cbd9-414a-4f1d-9b00-01b1b7dfac8d
 md""" En este caso la velocidad máxima sería:"""

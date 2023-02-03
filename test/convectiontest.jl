@@ -25,7 +25,7 @@ Nₗ = 5
 D = 0.02
 Sₜ = 0.03
 Sₗ = 0.04
-banco1 = Qu_pipe_array(D,Sₜ,Sₗ,Nₗ) 
+banco1 = Qupipearray(D,Sₜ,Sₗ,Nₗ) 
 
 T = 600
 Tₛ = 310

@@ -16,14 +16,14 @@ end;
     @test regime(Cylinder(1),11) == "turbulentlow"
     @test regime(Cylinder(1),999) == "turbulentlow"
     @test regime(Cylinder(1),1001) == "turbulenthigh"
-    @test regime(Il_pipe_array(1,1,1,1),9) == "laminar"
-    @test regime(Il_pipe_array(1,1,1,1),11) == "turbulentlow"
-    @test regime(Qu_pipe_array(1,1,1,1),99) == "turbulentlow"
-    @test regime(Il_pipe_array(1,1,1,1),101) == "turbulentmed"
-    @test regime(Qu_pipe_array(1,1,1,1),999) == "turbulentmed"
-    @test regime(Qu_pipe_array(1,1,1,1),1001) == "turbulenthigh"
-    @test regime(Il_pipe_array(1,1,1,1),199999) == "turbulenthigh"
-    @test regime(Qu_pipe_array(1,1,1,1),200001) == "turbulenthigher"
+    @test regime(Ilpipearray(1,1,1,1),9) == "laminar"
+    @test regime(Ilpipearray(1,1,1,1),11) == "turbulentlow"
+    @test regime(Qupipearray(1,1,1,1),99) == "turbulentlow"
+    @test regime(Ilpipearray(1,1,1,1),101) == "turbulentmed"
+    @test regime(Qupipearray(1,1,1,1),999) == "turbulentmed"
+    @test regime(Qupipearray(1,1,1,1),1001) == "turbulenthigh"
+    @test regime(Ilpipearray(1,1,1,1),199999) == "turbulenthigh"
+    @test regime(Qupipearray(1,1,1,1),200001) == "turbulenthigher"
     gas = Gas("air",300) ; sup = Wall(1) ; v = 12; flow = Flow(gas,v,sup)
     re = reynolds(sup,v,gas)
     @test regime(flow) == regime(sup,re)
@@ -42,8 +42,8 @@ end;
     @test h_conv(12,Wall(1.2),Gas("air",300),350) ≈ 21.88 atol=0.01
     @test h_conv(2,Wall(1.65),Liquid("agua",300),350) ≈ 5360 atol = 50
     @test h_conv(6,Cylinder(0.25),Gas("air",300),350) ≈ 23.52 atol = 0.1
-    @test h_conv(14,Il_pipe_array(0.025,0.04,0.04,7),Gas("air",400),350) ≈ 222.6 atol = 0.1
-    @test h_conv(14,Qu_pipe_array(0.025,0.04,0.04,7),Gas("air",400),350) ≈ 210.7 atol = 0.1
+    @test h_conv(14,Ilpipearray(0.025,0.04,0.04,7),Gas("air",400),350) ≈ 222.6 atol = 0.1
+    @test h_conv(14,Qupipearray(0.025,0.04,0.04,7),Gas("air",400),350) ≈ 210.7 atol = 0.1
     @test h_conv(1.7,CircularPipe(0.04),Liquid("agua",300),290) ≈ 5346 atol = 1
     @test h_conv(15,Duct(0.4,b = 0.4,l = 50,R =2),Gas("air",550),700) ≈ 33 atol = 0.1
     gas = Gas("air",300) ; sup = Wall(1) ; v = 12; flow = Flow(gas,v,sup)

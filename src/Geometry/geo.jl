@@ -102,6 +102,7 @@ julia> l = _length(X)
 """
 _length(X::XRange) = _endpoint(X) - _origin(X)
 
+#=
 """
 
 """
@@ -109,8 +110,9 @@ struct Domain2D
     X::XRange
     f₁::Function
     f₂::Function
-    function Domain2D(X::XRange,f1::Function;f2(x)=0)
+    function Domain2D(X::XRange,f1::Function,f2::Function)
         x₀ = _origin(X) , xₗ = _endpoint(X);
         @assert (max(f1(x₀),f1(xₗ),f2(x₀),f2(xₗ)) < Inf) & (min(f1(x₀),f1(xₗ),f2(x₀),f2(xₗ)) > -Inf) throw("Domain limits are not correctly defined")
     end
 end
+=#

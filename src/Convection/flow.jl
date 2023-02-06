@@ -71,10 +71,10 @@ function nusselt(cylinder::Cylinder, v::Real, fluid::AbstractFluid, fluidₛ::Ab
     pr = prandlt(fluid)
     prₛ = prandlt(fluidₛ)
     if 10 ≤ re < 1000
-        return Eφ * 0.59 * re^0.47 * pr^0.38 * (pr / prₛ)^0.25
+        return Eφ * 0.59 * re^0.47 * pr^0.38 * (pr/prₛ)^0.25
     else
         if re < 200000
-            return Eφ * 0.21 * re^0.62 * pr^0.38 * (pr / prₛ)^0.25
+            return Eφ * 0.21 * re^0.62 * pr^0.38 * (pr/prₛ)^0.25
         end
     end
 

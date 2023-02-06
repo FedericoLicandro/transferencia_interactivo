@@ -1,17 +1,96 @@
-export Film, Correction
-export intervec, intermat
+export Flow
+export intervec, intermat, regime
 export reynolds, grashoff, nusselt
 
 
-struct Film end
-struct Correction end
+"""
+Type containing flow properties and geometry
 
+### Fields
+
+- `fluid` Fluid that is flowing
+- `speed` Speed at which the fluid is flowing
+- `surface` Geometry that defines the shape of the flow
+
+### Constructors
+
+```
+Flow(flu::AbstractFluid,v::Real,sup::AbstractSurface)
+Flow(v::Real,sup::AbstractSurface,fluname::String,T::Real)
+```
+"""
+struct Flow
+    fluid::AbstractFluid
+    speed::Real
+    surface::AbstractSurface
+end
+function Flow(v::Real,sup::AbstractSurface,fluname::String,T::Real)
+    flu = Fluid(fluname,T)
+    flow = Flow(flu,v,sup)
+    return flow
+end
+
+"""
+    flowgeo(x::Flow)
+
+Returns the geometry defining a flows shape.
+"""
+flowgeo(x::Flow)=x.surface
+
+
+"""
+    flowspd(x::Flow)
+
+Returns the module of the flow speed away from the surface.
+"""
+flowspd(x::Flow)=x.speed
+
+
+"""
+    flowflu(x::Flow)
+
+Returns the fluid which is flowing.
+"""
+flowflu(x::Flow)=x.fluid
+
+
+
+"""
+    intervec(value::T, v1::Vector{S}, v2::Vector{D})::Float64 where T<:Number where S<:Number where D<:Number
+
+Interpolates looking for `value` in a vector `v1`, linearly aproximating its corresponding value at vector `v2`
+
+# Example
+
+```julia-repl
+julia> v1 = [3,2]
+julia> v2 = [10,9]
+julia> value = 2.5
+julia> intervec(value,v1,v2)
+9.5
+```
+"""
 function intervec(value::T, v1::Vector{S}, v2::Vector{D})::Float64 where T<:Number where S<:Number where D<:Number
     i = 1
-    while value < v1[i]
-        i = i + 1
+    if v1[1] > v1[2]
+        while value < v1[i]
+            i = i + 1
+        end
+        if value == v1[1]
+            return v2[1]
+        else
+            return (v2[i] - v2[i-1]) / (v1[i] - v1[i-1]) * (value - v1[i-1]) + v2[i-1]
+        end
+    else
+        while value > v1[i]
+            i = i + 1
+        end
+        if value == v1[1]
+            return v2[1]
+        else
+            return (v2[i] - v2[i-1]) / (v1[i] - v1[i-1]) * (value - v1[i-1]) + v2[i-1]
+        end
     end
-    return (v2[i] - v2[i+1]) / (v1[i] - v1[i+1]) * (value - v1[i+1]) + v2[i+1]
 end
 
 function intermat(value1,value2, v1::Vector{T}, v2::Vector{S},M::Matrix{D})::Float64 where T<:Number where S<:Number where D<:Number
@@ -29,14 +108,102 @@ function intermat(value1,value2, v1::Vector{T}, v2::Vector{S},M::Matrix{D})::Flo
 
 end
 
+"""
+    reynolds(x::Flow)
 
+Calculates the reynolds number from fluid properties, velocity and geometry.
+
+### Methods
+
+```
+reynolds(surface::AbstractSurface, v::Real, fluid::AbstractFluid)
+reynolds(x::Flow)
+reynolds(x::ForcedConv)
+```
+
+# Example
+
+```julia-repl
+julia> geo = Cylinder(0.08)
+julia> flu = Gas("air",300)
+julia> v = 8
+julia> flow = Flow(flu,v,geo)
+julia> reynolds(flow)
+40276.90371302705
+```
+"""
 function reynolds(surface::AbstractSurface, v::Real, fluid::AbstractFluid)::Real
     ν = viscocidad(fluid)
     L = char_length(surface)
-    re = v * L / ν
+    V = char_speed(surface, v)
+    re = V * L / ν
     return re
 end
+function reynolds(x::Flow)
+    sup = flowgeo(x) ; v = flowspd(x) ; flu = flowflu(x)
+    V = char_speed(sup,v) ; L = char_length(sup) ; ν = viscocidad(flu)
+    re = V * L / ν
+    return re
+end    
 
+
+"""
+    regime(x::Flow)
+
+Expresses the regime of a convective flow object type.
+
+### Methods
+```
+regime(sup::AbstracSurface,re::Real)
+regime(x::Flow)
+
+```
+# Example
+
+```julia-repl
+julia> geo = Wall(1)
+julia> flu = Gas("air",300)
+julia> v = 10
+julia> flow = Flow(flu,v,geo)
+julia> regime(flow)
+"turbulent"
+```
+"""
+function regime(wall::Wall,re::Real)
+    re < 500000 ? reg = "laminar" : reg = "turbulent"
+    return reg
+end
+function regime(cyl::Cylinder,re::Real)
+    re < 10 ? reg = "laminar" : re < 1000 ? reg = "turbulentlow" : reg = "turbulenthigh"
+    return reg
+end
+function regime(pipea::AbstractPipeArray,re::Real)
+    re < 10 ? reg = "laminar" : re < 100 ? reg = "turbulentlow" : re < 1000 ? reg = "turbulentmed" : re < 200000 ? reg = "turbulenthigh" : reg = "turbulenthigher"
+    return reg
+end
+function regime(pipe::AbstractPipe,re::Real)
+    re < 2000 ? reg = "laminar" : re<10000 ? reg = "transition" : reg="turbulent"
+    return reg
+end
+function regime(flow::Flow)
+    re = reynolds(flow) ; sup = flowgeo(flow)
+    reg = regime(sup,re)
+    return reg
+end
+"""
+    grashoff(flu::AbstractFluid,Tₛ::Real,sup::AbstractSurface) 
+
+Calculates the Grashoff number for a fluid `flu` interacting with a surface `sup` at a temperature `Tₛ`.
+
+# Example
+```julia-repl
+julia> geo = Cylinder(0.1)
+julia> flu = Gas("agua",350)
+julia> Tₛ = 320
+julia> grashoff(flu,Tₛ,geo)
+1.3405025566106656e9
+```
+"""
 function grashoff(fluid::AbstractFluid,Tₛ::Real,x::AbstractSurface)
     L = char_length(x)
     k, ν, Pr, β, name, T = get_props(fluid)
@@ -44,8 +211,29 @@ function grashoff(fluid::AbstractFluid,Tₛ::Real,x::AbstractSurface)
     return gr
 end
 
+"""
+    nusselt(cylinder::AbstractSurface,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)
 
-function nusselt(wall::Wall, v::Real, fluid::AbstractFluid)::Real
+Calculates the nusselt number for the given fluid, flow and geometry properties
+
+### Methods
+
+```julia-repl
+nusselt(wall::Wall,v::Real,fluid::AbstractFluid)
+nusselt(sup::AbstracSurface,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)
+```
+
+# Example
+```
+julia> geo = Cylinder(0.05)
+julia> flu = Gas("air",400)
+julia> v = 5
+julia> fluₛ = Gas("air",500)
+julia> nusselt(geo,v,flu,fluₛ)
+53.35272341539146
+```
+"""
+function nusselt(wall::Wall,v::Real,fluid::AbstractFluid)::Real
 
     re = reynolds(wall, v, fluid)
     pr = prandlt(fluid)
@@ -61,8 +249,7 @@ function nusselt(wall::Wall, v::Real, fluid::AbstractFluid)::Real
         end
     end
 end
-
-function nusselt(cylinder::Cylinder, v::Real, fluid::AbstractFluid, fluidₛ::AbstractFluid)::Real
+function nusselt(cylinder::Cylinder,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
     θ  = [90, 80, 70, 60, 50, 40, 30, 20, 10]
     EΨ = [1, 1, 0.98, 0.94, 0.88, 0.78, 0.67, 0.52, 0.42]
     φ  = cylinder_angle(cylinder)
@@ -79,8 +266,7 @@ function nusselt(cylinder::Cylinder, v::Real, fluid::AbstractFluid, fluidₛ::Ab
     end
 
 end
-
-function nusselt(ilpipe::Il_pipe_array, v::Real, fluid::AbstractFluid, fluidₛ::AbstractFluid)::Real
+function nusselt(ilpipe::Ilpipearray,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
     Cₙ = [0.99,0.98,0.97,0.95,0.92,0.9,0.86,0.8,0.7]
     n  = [16,13,10,7,5,4,3,2,1]
     Nₗ = array_NL(ilpipe)
@@ -113,9 +299,7 @@ function nusselt(ilpipe::Il_pipe_array, v::Real, fluid::AbstractFluid, fluidₛ:
     return nu
 
 end
-
-
-function nusselt(ilpipe::Qu_pipe_array, v::Real, fluid::AbstractFluid, fluidₛ::AbstractFluid)::Real
+function nusselt(ilpipe::Qupipearray,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
     Cₙ = [0.99,0.98,0.97,0.95,0.92,0.89,0.84,0.76,0.64]
     n  = [16,13,10,7,5,4,3,2,1]
     Nₗ = array_NL(ilpipe)
@@ -150,7 +334,6 @@ function nusselt(ilpipe::Qu_pipe_array, v::Real, fluid::AbstractFluid, fluidₛ:
     return nu
 
 end
-
 function nusselt(pipe::AbstractPipe,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)::Real
     D  = char_length(pipe)
     R = curvradius(pipe)
@@ -198,3 +381,4 @@ function nusselt(pipe::AbstractPipe,v::Real,fluid::AbstractFluid,fluidₛ::Abstr
     return nu
 
 end
+

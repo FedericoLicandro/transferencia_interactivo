@@ -22,7 +22,7 @@ end
 end
 
 @testset "Material definitions" begin
-    @test Metal(8933,0.385,401.0) == Metal("Cu",300)
+    @test Metal(8933,0.385,401.0,name="Cu") == Metal("Cu",300)
     @test_throws "Material is not available, check keys(Tₘₑₜ) for correct definition of metallic materials." Metal("wrongname",300)
     @test Gas(0.0263,0.707,15.89*10^-6,1/300,"air",300) == Gas("air",300)
     @test Fluid("air",300) == Gas("air",300)

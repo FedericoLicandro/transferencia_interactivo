@@ -13,8 +13,8 @@ end;
     sup1 = Duct(0.3)
     sup2 = Wall(1)
     sup3 = Cylinder(0.05)
-    sup4 = Ilpipearray(0.025)
-    sup5 = Ilpipearray(0.02)
+    sup4 = Ilpipearray(0.025,0.04,0.04,7)
+    sup5 = Qupipearray(0.020,0.035,0.035,5)
     sup6 = CircularPipe(0.0254)
     @test _is_internal_flow(sup1) == true
     @test _is_internal_flow(sup2) == false

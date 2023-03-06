@@ -1,6 +1,6 @@
 export Flow
 export intervec, intermat, regime
-export reynolds, grashoff, nusselt
+export reynolds, grashoff, nusselt, _is_internal_flow
 
 
 """
@@ -28,6 +28,33 @@ function Flow(v::Real,sup::AbstractSurface,fluname::String,T::Real)
     flu = Fluid(fluname,T)
     flow = Flow(flu,v,sup)
     return flow
+end
+
+_surfacename(sup::Wall) = "Pared plana"
+_surfacename(sup::Cylinder) = "Cilindro"
+_surfacename(sup::AbstractPipeArray) = "Banco de tubos"
+_surfacename(sup::CircularPipe) = "Tubo"
+_surfacename(sup::Duct) = "Ducto"
+
+
+_is_internal_flow(sup::AbstractSurface) = false
+_is_internal_flow(sup::AbstractPipe) = true
+
+
+function Base.show(io::IO,flow::Flow)
+    sup = flow.surface
+    flu = flow.fluid
+    T = flu.T
+    v = flow.speed
+    Lc =char_length(sup)
+    name = _fluid_name(flu)
+    if _is_internal_flow(sup)
+        println("Flujo interno de ",name," a velocidad v=$v","m/s, y temperatura T=$T","K")
+        println("A traves de un ",_surfacename(sup)," de diametro hidráulico D=$Lc","m")
+    else
+        println("Flujo externo de ",name," a velocidad v=$v","m/s, y temperatura T=$T","K")
+        println("Intercambiando con ",_surfacename(sup)," de longitud característica Lc=$Lc","m")
+    end
 end
 
 """

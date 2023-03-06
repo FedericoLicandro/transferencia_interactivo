@@ -5,6 +5,7 @@ using Gridap,
     WriteVTK,
     Gmsh,
     GridapGmsh,
+    Printf,
     Gridap.Io
 
 import Gmsh:gmsh

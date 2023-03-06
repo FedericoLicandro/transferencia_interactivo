@@ -9,6 +9,21 @@ using Test;
     @test Duct(1,b=1,l=50,R=0) == Duct(1)
 end;
 
+@testset "convección interna o externa" begin
+    sup1 = Duct(0.3)
+    sup2 = Wall(1)
+    sup3 = Cylinder(0.05)
+    sup4 = Ilpipearray(0.025)
+    sup5 = Ilpipearray(0.02)
+    sup6 = CircularPipe(0.0254)
+    @test _is_internal_flow(sup1) == true
+    @test _is_internal_flow(sup2) == false
+    @test _is_internal_flow(sup3) == false
+    @test _is_internal_flow(sup4) == false
+    @test _is_internal_flow(sup5) == false
+    @test _is_internal_flow(sup6) == true
+end;
+
 @testset "reynolds criticos" begin
     @test regime(Wall(1),500001) == "turbulent"
     @test regime(Wall(1),499999) == "laminar"

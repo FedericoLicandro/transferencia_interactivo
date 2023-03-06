@@ -17,7 +17,7 @@ export reynolds, grashoff, nusselt, arquimedes
 export surface, regime, nusselt, reynolds, grashoff
 export AbstractSurface, AbstractPipeArray, AbstractPipe
 export Wall, Cylinder, Ilpipearray, Qupipearray, CircularPipe, Duct, ForcedConv
-export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed
+export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed, _is_internal_flow
 
 
 
@@ -168,8 +168,9 @@ Type containig forced convection information.
     
 - `flu`: fluid.
 - `sup`: surface.
-- `Temp`: fluid temperature away form the surface.
-- `Tempₛ`: surface temperature.
+- `Temp`: fluid temperature away form the surface[K].
+- `Tempₛ`: surface temperature [K].
+- `v`: fluid velocity [m/s].
 - `reynolds`: Reynolds number.
 - `grashoff`: Grashoff number.
 - `nusselt`: Nusselt number.
@@ -189,10 +190,19 @@ julia> geo = Cylinder(0.08)
 julia> flu = Gas("air",300)
 julia> v = 8
 julia> flow = Flow(flu,v,geo)
+julia> Tₛ = 320
 julia> conv = ForcedConv(flow,Tₛ)
-ForcedConv(Gas(0.0263, 1.5890000000000005e-5, 0.707, 0.0033333333333333335, "air", 300),
-Cylinder(0.08, 90), 300, 320, 40276.90371302705, 1.324820327711904e6,
-131.99706901721413, 43.39403643940914)
+El coeficiente de convección forzada entre Aire que circula a v=8m/s y T=300K
+y una superficie del tipo Cilindro de longitud característica Lc=0.08m, que se encuentra a una temperatura Tₛ=320K
+es h=43.39403643940914W/m²K
+============================
+   Números adimencionales
+============================
+Número de Reynolds Re=40276.90371302705
+Número de Grashoff Gr=1.324820327711904e6
+Número de Nusselt Nu=131.99706901721413
+
+=       h=43.39403643940914W/m²K       =
 ```
 """
 struct ForcedConv
@@ -200,6 +210,7 @@ struct ForcedConv
     sup::AbstractSurface
     Temp::Real
     Tempₛ::Real
+    v::Real
     reynolds::Real
     grashoff::Real
     nusselt::Real
@@ -214,7 +225,7 @@ function ForcedConv(sup::AbstractSurface,T::Real,Tₛ::Real,v::Real,fluname::Str
     k = conductividad(flu)
     L = char_length(sup)
     h = Nu*k/L
-    return ForcedConv(flu,sup,T,Tₛ,Re,Gr,Nu,h)
+    return ForcedConv(flu,sup,T,Tₛ,v,Re,Gr,Nu,h)
 end
 function ForcedConv(flow::Flow,Tₛ::Real)
     flu₁ = flowflu(flow)
@@ -229,11 +240,38 @@ function ForcedConv(flow::Flow,Tₛ::Real)
     Gr = grashoff(flu,Tₛ,sup)
     L = char_length(sup)
     h = _calculate_h(Nu,L,k)
-    return ForcedConv(flu,sup,T,Tₛ,re,Gr,Nu,h)
+    return ForcedConv(flu,sup,T,Tₛ,v,re,Gr,Nu,h)
+end
+
+function Base.show(io::IO,fconv::ForcedConv)
+    flu = fluid(fconv)
+    sup = surface(fconv)
+    fluname = _fluid_name(flu)
+    v = speed(fconv)
+    Tf = fconv.Temp
+    Lc = char_length(sup)
+    Ts = fconv.Tempₛ
+    h=h_conv(fconv)
+    Re = reynolds(fconv)
+    Nu = nusselt(fconv)
+    Gr = grashoff(fconv)
+    println("El coeficiente de convección forzada entre ",fluname," que circula a v=$v","m/s y T=$Tf","K")
+    println("y una superficie del tipo ",_surfacename(sup)," de longitud característica Lc=$Lc","m, que se encuentra a una temperatura Tₛ=$Ts","K")
+    println("es h=$h","W/m²K")
+    println("============================")
+    println("   Números adimencionales   ")
+    println("============================")
+    println("Número de Reynolds Re=$Re")
+    println("Número de Grashoff Gr=$Gr")
+    println("Número de Nusselt Nu=$Nu")
+    println("")
+    println("=       h=$h","W/m²K       =")
+    println("")
 end
 
 fluid(x::ForcedConv)=x.flu
 surface(x::ForcedConv) = x.sup
+speed(x::ForcedConv) = x.v
 reynolds(x::ForcedConv) = x.reynolds
 nusselt(x::ForcedConv) = x.nusselt
 grashoff(x::ForcedConv) = x.grashoff

@@ -37,6 +37,13 @@ Base.@kwdef struct Wall <: AbstractSurface
     end
 end
 
+function Base.show(io::IO,sup::Wall)
+    Lc = sup.Lc
+    φ = sup.φ
+    println("Pared plana de largo L=$Lc","m")
+    println("Inclinación φ=$φ","º")
+end
+
 """
 Cylinder with crossed flow, characteristic length is the cilinders diameter
 
@@ -64,6 +71,13 @@ Base.@kwdef struct Cylinder <: AbstractSurface
     function Cylinder(L::Real; φ = 90)
         new(L,φ)        
     end
+end
+
+function Base.show(io::IO,sup::Cylinder)
+    Lc = sup.Lc
+    φ = sup.φ
+    println("Cilindro con flujo cruzado de diametro D=$Lc","m")
+    println("Angulo de incidencia φ=$φ","º")
 end
 
 """
@@ -127,11 +141,33 @@ julia> surface = Qupipearray(D,Sₜ,Sₗ,Nₗ)
 Qupipearray(0.01,0.03,0.03,10)
 ```
 """
+function Base.show(io::IO,sup::Ilpipearray)
+    Lc = sup.Lc
+    N = sup.Nₗ
+    SL =sup.Sₗ
+    St = sup.Sₜ
+    println("Banco de tubos con disposición alineada de diametro D=$Lc","m")
+    println("Cantidad de columnas N=$N")
+    println("Separación entre columnas Sₗ=$SL","m")
+    println("Separación entre filas Sₜ=$St","m")
+end
+
 struct Qupipearray <: AbstractPipeArray
     Lc::Real
     Sₜ::Real
     Sₗ::Real
     Nₗ::Int
+end
+
+function Base.show(io::IO,sup::Qupipearray)
+    Lc = sup.Lc
+    N = sup.Nₗ
+    SL =sup.Sₗ
+    St = sup.Sₜ
+    println("Banco de tubos con disposición tresbolillo de diametro D=$Lc","m")
+    println("Cantidad de columnas N=$N")
+    println("Separación entre columnas Sₗ=$SL","m")
+    println("Separación entre filas Sₜ=$St","m")
 end
 
 """
@@ -170,6 +206,14 @@ struct CircularPipe <: AbstractPipe
     function CircularPipe(D::Real;l=50,R=0)
         new(D,50,0)
     end
+end
+
+function Base.show(io::IO,sup::CircularPipe)
+    Lc = sup.Lc
+    l = sup.l
+    R = sup.R
+    println("Tubo de diametro D=$Lc","m")
+    println("Largo l=$l","m, ","radio de curvatura R=$R","m")
 end
 
 """
@@ -214,7 +258,14 @@ struct Duct <: AbstractPipe
     end
 end
 
-
+function Base.show(io::IO,sup::Duct)
+    a = sup.a
+    b = sup.b
+    l = sup.l
+    R = sup.R
+    println("Tubo de altura a=$a","m, ","ancho b=$b")
+    println("Largo l=$l","m, ","radio de curvatura R=$R","m")
+end
 
 "Returns the length field of a pipe object"
 pipe_length(x::AbstractPipe) = x.l;

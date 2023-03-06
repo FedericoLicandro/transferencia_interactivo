@@ -29,3 +29,9 @@ end
     @test Fluid("agua",300)==Liquid("agua",300)
 end
 
+@testset "fluid name" begin
+    @test _fluid_name(Gas("air",300)) == "Aire"
+    @test _fluid_name(Liquid("agua",300)) == "Agua"
+    @test _fluid_name(Gas(1,1,1,1,"custom",300)) == "Fluido personalizado"
+end
+

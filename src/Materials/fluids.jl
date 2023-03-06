@@ -25,7 +25,8 @@ Tₗᵤ = Dict();
 # Coef β en 1/K
 "Dictionary containig volumétrico coefficient of thermal expansion of fluids "
 βₗ = Dict();
-
+"Dictionary containing fluid names"
+nameₗ = Dict();
 # Propiedades en función de la temperatura; la primera entrada del diccionario indica el material, la segunda la temperatura en K
 
 # Aire
@@ -46,6 +47,8 @@ Pr["air",900] = 0.720; Pr["air",950] = 0.723; Pr["air",1000] = 0.726;
 
 Tₗᵤ["air"] = 100:50:1000;
 
+nameₗ["air"] = "Aire"
+
 
 # Agua
 
@@ -64,3 +67,5 @@ Tₗᵤ["agua"] = [273.15,280,290,300,310,320,330,340,350,360,373.15];
 
 βₗ["agua",273.15] = -68.05*10^-6; βₗ["agua",280] = 46.04*10^-6; βₗ["agua",290]     = 174.0*10^-6; βₗ["agua",300] = 276.1*10^-6; βₗ["agua",310] = 361.9*10^-6; βₗ["agua",320] = 436.7*10^-6; βₗ["agua",330] = 504.0*10^-6; βₗ["agua",340] = 566.0*10^-6;
 βₗ["agua",350]    =  624.2*10^-6; βₗ["agua",360] = 697.9*10^-6; βₗ["agua",373.15]  = 750.1*10^-6; 
+
+nameₗ["agua"] = "Agua"

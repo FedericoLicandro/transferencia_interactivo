@@ -7,20 +7,23 @@
 
 
 # Conductividad de metales en W/mk
-"Dictionary containig conductivity of metals"
+"Dictionary containing conductivity of metals"
 kₘ = Dict();
 
 # Calor específico metales en kJ/kgK
-"Dictionary containig heat constant of metals"
+"Dictionary containing heat constant of metals"
 C = Dict();
 
 # Temperaturas de evaluación de props en K
-"Dictionary containig temperature range of metals"
+"Dictionary containing temperature range of metals"
 Tₘₑₜ = Dict();
 
 # Densidad en kg/m³
-"Dictionary containig density of metals"
+"Dictionary containing density of metals"
 ρₘ = Dict();
+
+"Dictionary containing metal names"
+nameₘ = Dict();
 
 # Propiedades en función de la temperatura; la primera entrada del diccionario indica el material, la segunda la temperatura en K
 
@@ -30,6 +33,7 @@ kₘ["Cu",100] = 482; kₘ["Cu",200] = 413; kₘ["Cu",300] = 401; kₘ["Cu",400]
 C["Cu",100] = 0.252; C["Cu",200] = 0.356; C["Cu",300] = 0.385; C["Cu",400] = 0.397; C["Cu",600] = 0.417; C["Cu",800] = 0.433; C["Cu",1000] = 0.451; C["Cu",1200] = 0.480;
 Tₘₑₜ["Cu"] = [100,200,300,400,600,800,1000,1200];
 ρₘ["Cu"] = 8933;
+nameₘ["Cu"] = "Cobre"
 
 # AISI 1010
 
@@ -37,3 +41,4 @@ kₘ["AISI1010",300] = 63.9; kₘ["AISI1010",400] = 58.7; kₘ["AISI1010",600] =
 C["AISI1010",300] = 0.434; C["AISI1010",400] = 0.487; C["AISI1010",600] = 0.559; C["AISI1010",800] = 0.685; C["AISI1010",1000] = 1.168;
 Tₘₑₜ["AISI1010"] = [300,400,600,800,1000];
 ρₘ["AISI1010"] = 7832;
+nameₘ["AISI1010"] = "Acero AISI 1010"

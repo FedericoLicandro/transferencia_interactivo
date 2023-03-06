@@ -2,9 +2,11 @@
 
 module Materials
 
+using Printf
+
 export AbstractMaterial, AbstractSolid, AbstractFluid, Metal, Gas, Liquid, Fluid
-export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta, props, get_props, fluidtemp, _get_fluid_name, _is_liquid
-export kₗ, νₗ, Pr, Tₗᵤ, β, kₘ, C, Tₘₑₜ, ρₘ
+export k_fluid, k_solid, C_solid, ν_fluid, Pr_fluid, β_fluid, ρ_solid, conductividad, prandlt, viscocidad, densidad, calor_esp, diff_term, beta, props, get_props, fluidtemp, _get_fluid_name, _is_liquid, _fluid_name
+export kₗ, νₗ, Pr, Tₗᵤ, β, kₘ, C, Tₘₑₜ, ρₘ, nameₘ, nameₗ
 
 include("metals.jl")
 include("fluids.jl")
@@ -94,12 +96,13 @@ struct Metal <: AbstractSolid
     C::Real
     k::Real
     α::Real
+    T::Real
+    name::String
 
+    function Metal(ρ::Real, C::Real, k::Real; name="custom", T=300)
 
-    function Metal(ρ::Real, C::Real, k::Real)
-
-        @assert min(ρ, C, k) > 0 throw("Properties must be positive real numbers")
-        new(ρ, C, k, k / (ρ * C * 1000))
+        @assert min(ρ, C, k,T) > 0 throw("Properties must be positive real numbers")
+        new(ρ, C, k, k / (ρ * C * 1000), T, name)
 
     end
 
@@ -113,15 +116,35 @@ A partir de su temperatura y su nombre codigo, tomando las propiedades de la bib
 
     T: Temperatura del metal en K
 "
-function Metal(name, T)::Metal
+function Metal(nombre, Temp)::Metal
 
-    ρ = ρ_solid(name)
-    k = k_solid(name, T)
-    C = C_solid(name, T)
+    ρ = ρ_solid(nombre)
+    k = k_solid(nombre, Temp)
+    C = C_solid(nombre, Temp)
 
-    return Metal(ρ, C, k)
+    return Metal(ρ, C, k, T=Temp, name=nombre)
 end
 
+function Base.show(io::IO,met::Metal)
+    k = met.k
+    ρ = met.ρ
+    C = met.C
+    α = @sprintf("%.2e",k/(ρ*C*1000))
+    T = met.T
+    if met.name ∈ keys(nameₘ)
+        name = nameₘ[met.name]
+        println(name," a $T","K")
+    else
+        println("Metal personalizado")
+    end
+    println("=================")
+    println("   Propiedades   ")
+    println("=================")
+    println("Densidad ρ=$ρ","kg/m³")
+    println("Conductividad térmica k=$k","W/mK")
+    println("Capacidad térmica C=$C","kJ/kgK")
+    println("Difusividad térmica α=$α","m²/s")
+end
 
 function _props_sol(x::AbstractSolid)
 
@@ -288,6 +311,43 @@ function Liquid(name, T)::Liquid
     return Liquid(k, ν, Pr, β, named,Temp)
 
 end
+
+
+"""
+Gets fluid name in spansih for different struct shows
+
+if properties are listed, returns the corresponding name value for the selected fluid.
+
+if the fluid is not a preset material, returns "Fluido personalizado".
+
+"""
+function _fluid_name(flu::AbstractFluid)
+    if flu.name ∈ keys(nameₗ)
+        name = nameₗ[flu.name]
+    else
+        name = "Fluido personalizado"
+    end
+    return name    
+end
+
+function Base.show(io::IO,flu::AbstractFluid)
+    k = flu.k
+    Pr = flu.Pr
+    ν = flu.ν
+    β = flu.β
+    T = flu.T
+    name = _fluid_name(flu)
+    println(name," a $T","K")
+    println("=================")
+    println("   Propiedades   ")
+    println("=================")
+    println("Viscocidad cinemática ν=$ν","m²/s")
+    println("Conductividad térmica k=$k","W/mK")
+    println("Número de Prandlt Pr=$Pr")
+    println("Coeficiente de expansión β=$β","1/K")
+end
+
+
 
 function _is_liquid(name::String,dict=βₗ):Bool
     cond = (dict[name]=="liquid")

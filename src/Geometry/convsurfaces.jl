@@ -1,6 +1,6 @@
 export AbstractSurface, AbstractPipeArray, AbstractPipe
 export Wall, Cylinder, Ilpipearray, Qupipearray, CircularPipe, Duct
-export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed
+export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed, _is_vertical
 
 """
 Surfaces used for convection heat exchange
@@ -299,3 +299,5 @@ curvradius(x::AbstractPipe) = x.R
 char_speed(x::Any, v::Real) = abs(v);
 char_speed(x::Ilpipearray, v::Real) = abs(v) * (x.Sₜ /(x.Sₜ-x.Lc));
 char_speed(x::Qupipearray, v::Real) = abs(v) * max(x.Sₜ / (x.Sₜ - x.Lc), x.Sₜ / (2 * (quaxy_sd(x) - x.Lc)));
+
+_is_vertical(x::Wall) = x.φ == 90

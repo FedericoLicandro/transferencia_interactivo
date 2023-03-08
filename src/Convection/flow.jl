@@ -239,7 +239,29 @@ function grashoff(fluid::AbstractFluid,Tₛ::Real,x::AbstractSurface)
 end
 
 """
-    nusselt(cylinder::AbstractSurface,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)
+Calculates the Rayleigh number for nusselt calculations.
+
+### Methods
+```julia-repl
+rayleigh(gr::Real,flu::AbstractFluid)
+rayleigh(gr::Real,pr::Real)
+
+```
+
+# Example
+```julia-repl
+julia> pr = 0.707
+julia> gr = 2.0e9
+julia> rayleigh(gr,pr)
+1.414e9
+```
+
+"""
+rayleigh(gr::Real,flu::AbstractFluid) = prandlt(flu)*gr
+rayleigh(gr::Real,pr::Real) = gr*pr
+
+"""
+    nusselt(surf::AbstractSurface,v::Real,fluid::AbstractFluid,fluidₛ::AbstractFluid)
 
 Calculates the nusselt number for the given fluid, flow and geometry properties
 
@@ -408,4 +430,13 @@ function nusselt(pipe::AbstractPipe,v::Real,fluid::AbstractFluid,fluidₛ::Abstr
     return nu
 
 end
+#=
 
+function nusselt(wall::Wall,flu::AbstractFluid,Tₛ::Real)
+    if _is_vertical(wall)
+        gr = grashoff(flu,Tₛ,wall)
+        pr = prandlt(flu)
+        ra = rayleigh(gr,pr)
+        if ra
+end
+=#

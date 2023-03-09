@@ -14,7 +14,7 @@ end;
     @test _is_vertical(Wall(1,φ=270)) == true
     @test _is_vertical(Wall(1)) == false
     @test _is_horizontal(Wall(1)) == true
-    @test _is_horizontal(Wall(1,180)) == true
+    @test _is_horizontal(Wall(1,φ=180)) == true
     @test _is_horizontal(Wall(1,φ=30)) == false 
 end
 

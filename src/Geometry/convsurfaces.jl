@@ -1,6 +1,6 @@
 export AbstractSurface, AbstractPipeArray, AbstractPipe
 export Wall, Cylinder, Ilpipearray, Qupipearray, CircularPipe, Duct
-export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed, _is_vertical
+export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed, _is_vertical, _is_horizontal
 
 """
 Surfaces used for convection heat exchange
@@ -43,6 +43,10 @@ function Base.show(io::IO,sup::Wall)
     println("Pared plana de largo L=$Lc","m")
     println("Inclinación φ=$φ","º")
 end
+
+vWall(x::Real) = Wall(x,φ=90)
+dWall(x::Real) = Wall(x,φ=180)
+
 
 """
 Cylinder with crossed flow, characteristic length is the cilinders diameter
@@ -300,4 +304,5 @@ char_speed(x::Any, v::Real) = abs(v);
 char_speed(x::Ilpipearray, v::Real) = abs(v) * (x.Sₜ /(x.Sₜ-x.Lc));
 char_speed(x::Qupipearray, v::Real) = abs(v) * max(x.Sₜ / (x.Sₜ - x.Lc), x.Sₜ / (2 * (quaxy_sd(x) - x.Lc)));
 
-_is_vertical(x::Wall) = x.φ == 90
+_is_vertical(x::Wall) = inclination(x) == 90 || inclination(x) == 270
+_is_horizontal(x::Wall) = inclination(x) == 0 || inclination(x) == 180 

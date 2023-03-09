@@ -446,6 +446,30 @@ function nusselt(wall::Wall,flu::AbstractFluid,Tₛ::Real)
                 nu = 0.15*ra^0.33*(pr/prs)^0.25
             end
         end
+    elseif _is_horizontal(wall)
+        T = fluidtemp(flu)
+        if ((T < Tₛ) && (inclination(wall) == 0))||((Tₛ < T) && inclination(wall) == 180 )
+            if 10e4 ≤ ra < 10e7
+                nu = 0.54*ra^0.25
+            else
+                if 10e7 ≤ ra < 10e11
+                    nu = 0.15*ra^0.33
+                else
+                    throw("rayleigh out of range")
+                end
+            end
+        elseif ((T > Tₛ) && (inclination(wall) == 0))||((Tₛ > T) && inclination(wall) == 180)
+            if 10e5 ≤ ra < 10e10
+                nu = 0.27*ra^0.25
+            else
+                throw("rayleigh out of range")
+            end
+        end
     end
     return nu
 end
+#=
+function nusselt(surf::Cylinder,flu::AbstractFluid,Tₛ::Real)
+    
+end
+=#

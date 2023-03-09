@@ -430,13 +430,22 @@ function nusselt(pipe::AbstractPipe,v::Real,fluid::AbstractFluid,fluidₛ::Abstr
     return nu
 
 end
-#=
 
 function nusselt(wall::Wall,flu::AbstractFluid,Tₛ::Real)
     if _is_vertical(wall)
         gr = grashoff(flu,Tₛ,wall)
         pr = prandlt(flu)
+        prs = prandlt(flu,Tₛ)
         ra = rayleigh(gr,pr)
-        if ra
+        if ra < 10^3
+            @throw("Rayleigh out of range")
+        else
+            if ra < 10^9
+                nu = 0.76*ra^0.25*(pr/prs)^0.25
+            else
+                nu = 0.15*ra^0.33*(pr/prs)^0.25
+            end
+        end
+    end
+    return nu
 end
-=#

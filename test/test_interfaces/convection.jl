@@ -9,6 +9,11 @@ using Test;
     @test Duct(1,b=1,l=50,R=0) == Duct(1)
 end;
 
+@testset "funciones de superficies" begin
+    @test _is_vertical(Wall(1,φ=90)) == true
+    @test _is_vertical(Wall(1)) == false
+end
+
 @testset "convección interna o externa" begin
     sup1 = Duct(0.3)
     sup2 = Wall(1)

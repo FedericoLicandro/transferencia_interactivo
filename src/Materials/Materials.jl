@@ -374,6 +374,15 @@ _get_fluid_name(x::AbstractFluid) = x.name
 
 "Número de Prandlt del fluido x"
 prandlt(x::AbstractFluid) = x.Pr
+function prandlt(x::AbstractFluid,Tₛ::Real)
+   name = _get_fluid_name(x)
+   if name ∈ keys(nameₗ)
+        prs = Pr_fluid(name,Tₛ)
+   else
+        prs = prandlt(x)
+   end
+   return prs
+end
 
 fluidtemp(x::AbstractFluid) = x.T
 

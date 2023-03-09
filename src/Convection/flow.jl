@@ -46,7 +46,7 @@ function Base.show(io::IO,flow::Flow)
     flu = flow.fluid
     T = flu.T
     v = flow.speed
-    Lc =char_length(sup)
+    Lc = char_length(sup)
     name = _fluid_name(flu)
     if _is_internal_flow(sup)
         println("Flujo interno de ",name," a velocidad v=$v","m/s, y temperatura T=$T","K")
@@ -438,7 +438,7 @@ function nusselt(wall::Wall,flu::AbstractFluid,Tₛ::Real)
         prs = prandlt(flu,Tₛ)
         ra = rayleigh(gr,pr)
         if ra < 10^3
-            @throw("Rayleigh out of range")
+            throw("Rayleigh out of range")
         else
             if ra < 10^9
                 nu = 0.76*ra^0.25*(pr/prs)^0.25

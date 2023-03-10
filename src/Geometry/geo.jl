@@ -102,17 +102,96 @@ julia> l = _length(X)
 """
 _length(X::XRange) = _endpoint(X) - _origin(X)
 
-#=
+struct Point
+    x::Real
+    y::Real
+end
+
+function Base.show(io::IO,p::Point)
+    px = p.x;
+    py = p.y;
+    print(io,"($px,$py)") 
+end
+
 """
 
 """
 struct Domain2D
     X::XRange
-    f₁::Function
-    f₂::Function
-    function Domain2D(X::XRange,f1::Function,f2::Function)
-        x₀ = _origin(X) , xₗ = _endpoint(X);
-        @assert (max(f1(x₀),f1(xₗ),f2(x₀),f2(xₗ)) < Inf) & (min(f1(x₀),f1(xₗ),f2(x₀),f2(xₗ)) > -Inf) throw("Domain limits are not correctly defined")
-    end
+    ∂north::Function
+    ∂south::Function
 end
-=#
+
+north(Ω::Domain2D) = Ω.∂north
+south(Ω::Domain2D) = Ω.∂south
+xrange(Ω::Domain2D) = Ω.X
+xwest(Ω::Domain2D) = _origin(xrange(Ω))
+xeast(Ω::Domain2D) = _endpoint(xrange(Ω))
+_length(Ω::Domain2D) = _length(xrange(Ω))
+
+function swcorner(Ω::Domain2D)
+    fₛ = south(Ω)
+    xw = xwest(Ω)
+    return Point(xw,fₛ(xw))
+end
+
+function nwcorner(Ω::Domain2D)
+    fₙ = north(Ω)
+    xw = xwest(Ω)
+    return Point(xw,fₙ(xw))
+end
+
+function necorner(Ω::Domain2D)
+    fₙ = north(Ω)
+    xe = xeast(Ω)
+    return Point(xe,fₙ(xe))
+end
+
+function secorner(Ω::Domain2D)
+    fₛ = south(Ω);
+    xe = xeast(Ω);
+    return Point(xe,fₛ(xe))
+end
+
+function corners(Ω)
+    sw = swcorner(Ω::Domain2D);
+    nw = nwcorner(Ω::Domain2D);
+    ne = necorner(Ω::Domain2D);
+    se = secorner(Ω::Domain2D);
+    corners = [sw,nw,ne,se]
+    return corners
+end
+
+function evpoint∂(p::Point,L::Real,n::Int,f::Function)
+    pointvec = Point[]
+    h = L/(n-1)
+    push!(pointvec,p)
+    for i in 1:n-2
+        xp = p.x + i*h
+        yp = f(xp)
+        pₒ = Point(xp,yp)
+        push!(pointvec,pₒ)
+    end
+    return pointvec
+end
+
+function ∂N(Ω::Domain2D,n::Int)
+    fₙ  = north(Ω)
+    L = _length(Ω)
+    nw = nwcorner(Ω)
+    ∂Nₙ = evpoint∂(nw,L,n,fₙ)
+    ne = necorner(Ω)
+    push!(∂Nₙ,ne)
+    return ∂Nₙ
+end
+
+f1(x) = x
+f2(x) = 0
+X    = XRange(2,x0 = 1 )
+Ω    = Domain2D(X,f1,f2)
+corn = corners(Ω)
+se   = secorner(Ω);
+n    = 20
+∂Nₙ   = ∂N(Ω,n)
+
+

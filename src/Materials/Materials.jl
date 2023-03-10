@@ -133,17 +133,17 @@ function Base.show(io::IO,met::Metal)
     T = met.T
     if met.name ∈ keys(nameₘ)
         name = nameₘ[met.name]
-        println(name," a $T","K")
+        println(io,name," a $T","K")
     else
         println("Metal personalizado")
     end
-    println("=================")
-    println("   Propiedades   ")
-    println("=================")
-    println("Densidad ρ=$ρ","kg/m³")
-    println("Conductividad térmica k=$k","W/mK")
-    println("Capacidad térmica C=$C","kJ/kgK")
-    println("Difusividad térmica α=$α","m²/s")
+    println(io,"=================")
+    println(io,"   Propiedades   ")
+    println(io,"=================")
+    println(io,"Densidad ρ=$ρ","kg/m³")
+    println(io,"Conductividad térmica k=$k","W/mK")
+    println(io,"Capacidad térmica C=$C","kJ/kgK")
+    println(io,"Difusividad térmica α=$α","m²/s")
 end
 
 function _props_sol(x::AbstractSolid)
@@ -337,14 +337,14 @@ function Base.show(io::IO,flu::AbstractFluid)
     β = flu.β
     T = flu.T
     name = _fluid_name(flu)
-    println(name," a $T","K")
-    println("=================")
-    println("   Propiedades   ")
-    println("=================")
-    println("Viscocidad cinemática ν=$ν","m²/s")
-    println("Conductividad térmica k=$k","W/mK")
-    println("Número de Prandlt Pr=$Pr")
-    println("Coeficiente de expansión β=$β","1/K")
+    println(io,name," a $T","K")
+    println(io,"=================")
+    println(io,"   Propiedades   ")
+    println(io,"=================")
+    println(io,"Viscocidad cinemática ν=$ν","m²/s")
+    println(io,"Conductividad térmica k=$k","W/mK")
+    println(io,"Número de Prandlt Pr=$Pr")
+    println(io,"Coeficiente de expansión β=$β","1/K")
 end
 
 

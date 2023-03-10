@@ -10,7 +10,7 @@ Nl = 6
 flu = Gas("air",T)
 sup = Qupipearray(D,St,Sl,Nl)
 V = char_speed(sup,v)
-h = h_conv(v,sup,flu,Tₛ,Forced())
+h = h_conv(v,sup,flu,Tₛ)
 lD = 8/0.4
 #la wea qlfome
 
@@ -23,4 +23,9 @@ supw = CircularPipe(D,l=0.35,R=0)
 re = vw*D/ν
 β = β_fluid("agua",Tw)
 gr = 9.8*β*abs(Tw-Ts)*D^3/ν^2
-h    = h_conv(vw,supw,fluw,Ts,Forced())
+h    = h_conv(vw,supw,fluw,Ts,)
+
+L = 1
+surf = Wall(L)
+flow = Flow(flu,v,surf)
+conv = ForcedConv(flow,Tₛ)

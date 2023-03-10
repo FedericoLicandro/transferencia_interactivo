@@ -40,8 +40,8 @@ end
 function Base.show(io::IO,sup::Wall)
     Lc = sup.Lc
     φ = sup.φ
-    println("Pared plana de largo L=$Lc","m")
-    println("Inclinación φ=$φ","º")
+    println(io,"Pared plana de largo L=$Lc","m")
+    println(io,"Inclinación φ=$φ","º")
 end
 
 vWall(x::Real) = Wall(x,φ=90)
@@ -80,8 +80,8 @@ end
 function Base.show(io::IO,sup::Cylinder)
     Lc = sup.Lc
     φ = sup.φ
-    println("Cilindro con flujo cruzado de diametro D=$Lc","m")
-    println("Angulo de incidencia φ=$φ","º")
+    println(io,"Cilindro con flujo cruzado de diametro D=$Lc","m")
+    println(io,"Angulo de incidencia φ=$φ","º")
 end
 
 """
@@ -150,10 +150,10 @@ function Base.show(io::IO,sup::Ilpipearray)
     N = sup.Nₗ
     SL =sup.Sₗ
     St = sup.Sₜ
-    println("Banco de tubos con disposición alineada de diametro D=$Lc","m")
-    println("Cantidad de columnas N=$N")
-    println("Separación entre columnas Sₗ=$SL","m")
-    println("Separación entre filas Sₜ=$St","m")
+    println(io,"Banco de tubos con disposición alineada de diametro D=$Lc","m")
+    println(io,"Cantidad de columnas N=$N")
+    println(io,"Separación entre columnas Sₗ=$SL","m")
+    println(io,"Separación entre filas Sₜ=$St","m")
 end
 
 struct Qupipearray <: AbstractPipeArray
@@ -168,10 +168,10 @@ function Base.show(io::IO,sup::Qupipearray)
     N = sup.Nₗ
     SL =sup.Sₗ
     St = sup.Sₜ
-    println("Banco de tubos con disposición tresbolillo de diametro D=$Lc","m")
-    println("Cantidad de columnas N=$N")
-    println("Separación entre columnas Sₗ=$SL","m")
-    println("Separación entre filas Sₜ=$St","m")
+    println(io,"Banco de tubos con disposición tresbolillo de diametro D=$Lc","m")
+    println(io,"Cantidad de columnas N=$N")
+    println(io,"Separación entre columnas Sₗ=$SL","m")
+    println(io,"Separación entre filas Sₜ=$St","m")
 end
 
 """
@@ -216,8 +216,8 @@ function Base.show(io::IO,sup::CircularPipe)
     Lc = sup.Lc
     l = sup.l
     R = sup.R
-    println("Tubo de diametro D=$Lc","m")
-    println("Largo l=$l","m, ","radio de curvatura R=$R","m")
+    println(io,"Tubo de diametro D=$Lc","m")
+    println(io,"Largo l=$l","m, ","radio de curvatura R=$R","m")
 end
 
 """
@@ -267,8 +267,8 @@ function Base.show(io::IO,sup::Duct)
     b = sup.b
     l = sup.l
     R = sup.R
-    println("Tubo de altura a=$a","m, ","ancho b=$b")
-    println("Largo l=$l","m, ","radio de curvatura R=$R","m")
+    println(io,"Tubo de altura a=$a","m, ","ancho b=$b")
+    println(io,"Largo l=$l","m, ","radio de curvatura R=$R","m")
 end
 
 "Returns the length field of a pipe object"

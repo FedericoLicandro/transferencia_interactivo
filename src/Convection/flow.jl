@@ -49,11 +49,11 @@ function Base.show(io::IO,flow::Flow)
     Lc = char_length(sup)
     name = _fluid_name(flu)
     if _is_internal_flow(sup)
-        println("Flujo interno de ",name," a velocidad v=$v","m/s, y temperatura T=$T","K")
-        println("A traves de un ",_surfacename(sup)," de diametro hidráulico D=$Lc","m")
+        println(io,"Flujo interno de ",name," a velocidad v=$v","m/s, y temperatura T=$T","K")
+        println(io,"A traves de un ",_surfacename(sup)," de diametro hidráulico D=$Lc","m")
     else
-        println("Flujo externo de ",name," a velocidad v=$v","m/s, y temperatura T=$T","K")
-        println("Intercambiando con ",_surfacename(sup)," de longitud característica Lc=$Lc","m")
+        println(io,"Flujo externo de ",name," a velocidad v=$v","m/s, y temperatura T=$T","K")
+        println(io,"Intercambiando con ",_surfacename(sup)," de longitud característica Lc=$Lc","m")
     end
 end
 

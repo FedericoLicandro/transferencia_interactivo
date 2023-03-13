@@ -27,10 +27,13 @@ using PlutoUI
 using Interactive_HT
 
 # ╔═╡ dd51a900-6c85-11ed-12f3-e195f1415dc3
-md"""### Convección """
+md"""### Material complementario e interactivo sobre Convección """
+
+# ╔═╡ 0873aec3-5c1e-435c-a965-eb74ddc3c551
+md"""El material que se presenta en esta página es un complemento de las clases y bibliografía del curso Transferencia de Calor, el mismo no sustituye la bibluiografía recomendada."""
 
 # ╔═╡ bb14fae8-7e44-41ca-8a2e-5189041dab08
-md"""Notebook interactivo para calculo de formulas de convección en aire"""
+md"""La transferencia de calor por convección es el mecanismo de transferencia de energía térmica, que se da entre una superficie y un fluido en movimiento a diferente temperatura. Es la convinación de los mecanismos de conducción y advección. """
 
 # ╔═╡ 62b260a4-07fa-4fd3-8a0e-491936815366
 md"""velocidad $v$  [$m/s$]"""
@@ -72,7 +75,10 @@ md"""Temperatura de superficie $Tₛ \ [K]$"""
 md"""El coeficiente de intercambio de calor por convección resulta:"""
 
 # ╔═╡ 72275dc6-518d-4574-a5de-d9a584a646b5
-hₚ = trunc(h_conv(v,pared,air,T,Tₛ,Forced()), digits=2)
+begin
+hₚ = trunc(h_conv(v,pared,air,Tₛ), digits=2);
+md"$hₚ W/m²K"
+end
 
 # ╔═╡ 48416af6-5f8a-4bbe-b949-84c0f80c163f
 md""" ### Cilindro """
@@ -99,7 +105,7 @@ cilindro = Cylinder(Dᵪ,φ =θ)
 md"""El coeficiente de intercambio de calor por convección resulta:"""
 
 # ╔═╡ 9025afb7-6c89-4fb1-84eb-8c9dc084ceb8
-hᵪ = trunc(h_conv(v,cilindro,air,T,Forced()), digits = 2)
+hᵪ = trunc(h_conv(v,cilindro,air,T), digits = 2)
 
 # ╔═╡ 458ddb7a-a58f-4d86-951e-a10b1af2defd
 md""" ### Banco de tubos """
@@ -150,7 +156,7 @@ V = trunc(char_speed(banco,v), digits = 2)
 md"""El coeficiente de intercambio de calor por convección resulta:"""
 
 # ╔═╡ 332a5915-2244-4357-aeb7-24efeb61ccb3
-hᵦ = trunc(h_conv(v,banco,air,T,Forced()), digits = 1)
+hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 
 # ╔═╡ Cell order:
 # ╟─fb5fd8bb-cbf2-4df7-b982-10cada4dc231
@@ -158,6 +164,7 @@ hᵦ = trunc(h_conv(v,banco,air,T,Forced()), digits = 1)
 # ╟─4be4ba4a-2bdf-4dd1-8f80-36912a5361eb
 # ╟─70a372cf-d9f0-4e12-9a1a-4c7638143e79
 # ╟─dd51a900-6c85-11ed-12f3-e195f1415dc3
+# ╟─0873aec3-5c1e-435c-a965-eb74ddc3c551
 # ╟─bb14fae8-7e44-41ca-8a2e-5189041dab08
 # ╟─62b260a4-07fa-4fd3-8a0e-491936815366
 # ╟─dd328cf6-b219-4a7f-874e-d66b1a87f6c3
@@ -176,7 +183,7 @@ hᵦ = trunc(h_conv(v,banco,air,T,Forced()), digits = 1)
 # ╟─48416af6-5f8a-4bbe-b949-84c0f80c163f
 # ╟─b5741bdd-e14c-4e79-adeb-2c50d8626ebf
 # ╟─90b8271b-8878-4341-a80f-3c09e40f5348
-# ╠═fc57526a-180d-40a3-aa8f-53d7f5ddbccf
+# ╟─fc57526a-180d-40a3-aa8f-53d7f5ddbccf
 # ╟─a2088b4e-e7a2-431c-aba0-51ef82b4f6b6
 # ╟─3a4a0463-c9dc-48a4-b90c-44fc82765a4f
 # ╟─703405b9-b59d-4bf8-baad-71a9d36b0fa2

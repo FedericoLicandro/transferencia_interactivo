@@ -162,9 +162,10 @@ function corners(Ω)
     return corners
 end
 
-function evpoint∂(p::Point,L::Real,n::Int,f::Function)
+nodeseparation(n::Int,L::Real) = L/(n-1)
+
+function evpoint∂(p::Point,h::Real,n::Int,f::Function)
     pointvec = Point[]
-    h = L/(n-1)
     push!(pointvec,p)
     for i in 1:n-2
         xp = p.x + i*h
@@ -175,15 +176,56 @@ function evpoint∂(p::Point,L::Real,n::Int,f::Function)
     return pointvec
 end
 
-function ∂N(Ω::Domain2D,n::Int)
+function ∂N(Ω::Domain2D,n::Int,h::Real,nw::Point,ne::Point)
     fₙ  = north(Ω)
-    L = _length(Ω)
-    nw = nwcorner(Ω)
-    ∂Nₙ = evpoint∂(nw,L,n,fₙ)
-    ne = necorner(Ω)
+    ∂Nₙ = evpoint∂(nw,h,n,fₙ)
     push!(∂Nₙ,ne)
     return ∂Nₙ
 end
+
+function ∂S(Ω::Domain2D,n::Int,h::Real,sw::Point,se::Point)
+    fₛ  = south(Ω)  
+    ∂Sₙ = evpoint∂(sw,h,n,fₛ)
+    push!(∂Sₙ,se)
+    return ∂Nₙ
+end
+
+function ∂W(h::Real,sw::Point,nw::Point)
+    px = sw.x
+    py = sw.y + h
+    ny = nw.y
+    ∂Wₙ = Point[]
+    while py < ny 
+        p = Point(px,py)
+        push!(∂Wₙ,p)
+        py += h
+    end
+    return ∂Wₙ 
+end
+
+function ∂E(h::Real,se::Point,ne::Point)
+    px = se.x
+    py = se.y + h
+    ny = ne.y
+    ∂Eₙ = Point[]
+    while py < ny
+        p = Point(px,py)
+        push!(∂Eₙ,p)
+        py += h
+    end
+    return ∂Eₙ    
+end
+
+function borderpoints(Ω::Domain2D,n::Int)
+    sw , nw , ne , se = corners(Ω);
+    L = _length(Ω)
+    h = nodeseparation(n,L)
+    ∂Wₙ = ∂W(h,sw,nw)
+    ∂Nₙ = ∂N(Ω,n,h,nw,ne)
+    ∂Sₙ = ∂S(Ω,n,h,sw,se)
+    ∂Eₙ = ∂E(h,se,ne)
+end
+
 
 f1(x) = x
 f2(x) = 0
@@ -192,6 +234,6 @@ X    = XRange(2,x0 = 1 )
 corn = corners(Ω)
 se   = secorner(Ω);
 n    = 20
-∂Nₙ   = ∂N(Ω,n)
+
 
 

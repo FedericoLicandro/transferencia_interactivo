@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.16
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
@@ -27,13 +27,40 @@ using PlutoUI
 using Interactive_HT
 
 # ╔═╡ dd51a900-6c85-11ed-12f3-e195f1415dc3
-md"""### Material complementario e interactivo sobre Convección """
+md"""### Material complementario e interactivo sobre Convección."""
 
 # ╔═╡ 0873aec3-5c1e-435c-a965-eb74ddc3c551
-md"""El material que se presenta en esta página es un complemento de las clases y bibliografía del curso Transferencia de Calor, el mismo no sustituye la bibluiografía recomendada."""
+md"""El material que se presenta en esta página es un complemento de las clases y bibliografía del curso Transferencia de Calor, el mismo no sustituye la bibluiografía recomendada. Los aspectos teóricos descriptos se presentan de manera resumida."""
 
 # ╔═╡ bb14fae8-7e44-41ca-8a2e-5189041dab08
-md"""La transferencia de calor por convección es el mecanismo de transferencia de energía térmica, que se da entre una superficie y un fluido en movimiento a diferente temperatura. Es la convinación de los mecanismos de conducción y advección. """
+md"""La transferencia de calor por convección es el mecanismo de transferencia de energía térmica, que se da en un fluido cuando presenta diferente temperatura y movimiento relativo con un elemento del espacio (no necesariamente físico, puede ser una superficie imaginaria dentro del fluido). La convección es la convinación de la conducción en el medio fluido (difusión de energía con constante k) y la advección (transporte de enrgía). La conducción es la transferencia de energía que se da por las interacciones (choques, vibraciones, movimientos aleatorios entre capas de fluid) entre partículas de mayor energía cinética (zonas de mayor temperatura) con particulas de menor nivel energético. La advección es la transferencia de energía por transporte de particulas que tienen más energía cinética a zonas donde las particulas tienen menos energía cinética. En conclusión, para que se den los mecanismos de transferencia de calor por convección se necesitan: zonas con particulas con diferentes energías cinéticas, que se representa con la existencia de un gradiente de temperaturas, un medio que permita la conductividad de calor y un mecanismo de transporte que produzca la advección (movimiento relativo)."""
+
+# ╔═╡ 7c22d65d-e3d9-41c5-9761-5d77ae33e5c2
+md"""En el curso se le presta especial atención al intercambio entre un fluido en movimiento y una superficie física que lo limita, a diferentes temperaturas. En este caso, el contacto hidrodinámico entre la superficie y el fluido, por la condición de no deslizamiento, genera una capa limite de velocidades, donde la velocidad varia desde 0 y $u₀$, donde $u₀$ es la velocidad lejos de la superficie. Si además la temperatura de la superficie $Tₛ$ y la del fluido $T₀$ son diferentes, se genera una capa limite de temperaturas. La convección entre el fluido y la superficie se da por la difusión y advección del fluido en la capa limite de temperaturas. """
+
+# ╔═╡ 70e784b2-4858-4241-95a2-8eab32618922
+md"""La ley de enfriamiento de Newton modela la potencia calorífica intercambiada entre una superficie a una temperatura $Tₛ$ y un fluido a temperatura $T$:"""
+
+# ╔═╡ 49e8ae4b-d68c-418b-b4f4-ae5f56877c75
+md"""$q''=h(T-Tₛ)$"""
+
+# ╔═╡ 24a105fd-4ae9-4a17-b8bc-5510021a85b2
+md"""Donde $q''$ es la tasa de flujo calorifico (W/m²) y $h$ es el coeficiente de convección (W/m²K). El coeficiente $h$ depende de las condiciones de la capa límite, que engloban propiedades del fluido, características del flujo y de la geometría."""
+
+# ╔═╡ ae77ceff-e972-414a-b359-8fbdcb3c48e7
+md"""Los mecanismos difusivos de calor gobiernan la transferencia en las zonas de baja velocidad, ya que baja velocidad implica poco transporte. En particular, si se analiza la capa de fluido inmediatamente sobre la superficie (siendo $y$ la coordenada que mide la distancia perpendicular a la superficie en cada uno de sus puntos, es la capa correspondiente a $y=0$), por condición de adherencia del fluido, la velocidad es nula. En esa capa la convección esta dada completamente por la difusión de calor, que se puede modelar con la ley de Fourier."""
+
+# ╔═╡ 98154d1d-e0d1-400b-8d23-ab344dc8093a
+md"""$q''=-k∇T$"""
+
+# ╔═╡ 49f52775-42bc-4c77-9ad4-3ab50b9da45b
+md"""Si $x$ es la dirección perpendicular a y en la capa sobre la superficie, se puede ver facilmente que el gradiente de la temperatura es igual a la derivada en $y$, ya que T(x,y=0)=Tₛ"""
+
+# ╔═╡ a341496c-8469-461e-a828-66746c622937
+md"""Igualando la ley de enfriamiento de Newton a la ley de fourier en $y=0$ se obtiene"""
+
+# ╔═╡ d5ffff65-56b2-4bda-b34c-e593c065d3ee
+md"""$h=-k\frac{\frac{∂T}{∂y}}{T-Tₛ}$"""
 
 # ╔═╡ 62b260a4-07fa-4fd3-8a0e-491936815366
 md"""velocidad $v$  [$m/s$]"""
@@ -166,6 +193,15 @@ hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 # ╟─dd51a900-6c85-11ed-12f3-e195f1415dc3
 # ╟─0873aec3-5c1e-435c-a965-eb74ddc3c551
 # ╟─bb14fae8-7e44-41ca-8a2e-5189041dab08
+# ╟─7c22d65d-e3d9-41c5-9761-5d77ae33e5c2
+# ╟─70e784b2-4858-4241-95a2-8eab32618922
+# ╟─49e8ae4b-d68c-418b-b4f4-ae5f56877c75
+# ╟─24a105fd-4ae9-4a17-b8bc-5510021a85b2
+# ╟─ae77ceff-e972-414a-b359-8fbdcb3c48e7
+# ╟─98154d1d-e0d1-400b-8d23-ab344dc8093a
+# ╟─49f52775-42bc-4c77-9ad4-3ab50b9da45b
+# ╟─a341496c-8469-461e-a828-66746c622937
+# ╟─d5ffff65-56b2-4bda-b34c-e593c065d3ee
 # ╟─62b260a4-07fa-4fd3-8a0e-491936815366
 # ╟─dd328cf6-b219-4a7f-874e-d66b1a87f6c3
 # ╟─f2c4cea9-15ca-4707-adb2-5941ef976945

@@ -18,7 +18,7 @@ export surface, regime, nusselt, reynolds, grashoff
 export AbstractSurface, AbstractPipeArray, AbstractPipe
 export Wall, Cylinder, Ilpipearray, Qupipearray, CircularPipe, Duct, ForcedConv
 export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed, _is_internal_flow, _is_vertical, _is_horizontal
-
+export δCLh, δCLt
 
 
 struct Forced end

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.16
 
 using Markdown
 using InteractiveUtils
@@ -39,10 +39,10 @@ md"""La transferencia de calor por convección es el mecanismo de transferencia 
 md"""En el curso se le presta especial atención al intercambio entre un fluido en movimiento y una superficie física que lo limita, a diferentes temperaturas. En este caso, el contacto hidrodinámico entre la superficie y el fluido, por la condición de no deslizamiento, genera una capa limite de velocidades, donde la velocidad varia desde 0 y $u₀$, donde $u₀$ es la velocidad lejos de la superficie. Si además la temperatura de la superficie $Tₛ$ y la del fluido $T₀$ son diferentes, se genera una capa limite de temperaturas. La convección entre el fluido y la superficie se da por la difusión y advección del fluido en la capa limite de temperaturas. """
 
 # ╔═╡ 70e784b2-4858-4241-95a2-8eab32618922
-md"""La ley de enfriamiento de Newton modela la potencia calorífica intercambiada entre una superficie a una temperatura $Tₛ$ y un fluido a temperatura $T$:"""
+md"""La ley de enfriamiento de Newton modela la potencia calorífica intercambiada entre una superficie a una temperatura $Tₛ$ y un fluido a temperatura $Tₗ$:"""
 
 # ╔═╡ 49e8ae4b-d68c-418b-b4f4-ae5f56877c75
-md"""$q''=h(T-Tₛ)$"""
+md"""$q''=h(Tₗ-Tₛ)$"""
 
 # ╔═╡ 24a105fd-4ae9-4a17-b8bc-5510021a85b2
 md"""Donde $q''$ es la tasa de flujo calorifico (W/m²) y $h$ es el coeficiente de convección (W/m²K). El coeficiente $h$ depende de las condiciones de la capa límite, que engloban propiedades del fluido, características del flujo y de la geometría."""
@@ -60,7 +60,24 @@ md"""Si $x$ es la dirección perpendicular a y en la capa sobre la superficie, s
 md"""Igualando la ley de enfriamiento de Newton a la ley de fourier en $y=0$ se obtiene"""
 
 # ╔═╡ d5ffff65-56b2-4bda-b34c-e593c065d3ee
-md"""$h=-k\frac{\frac{∂T}{∂y}}{T-Tₛ}$"""
+md"""$h=-k\frac{\frac{∂T}{∂y}}{Tₗ-Tₛ}$"""
+
+# ╔═╡ db33c58b-5987-49c7-b3c9-68a0a1e600f6
+md""" Multiplicando ambos lados de la igualdad por una longitúd característica $L$ y definiendo la temperatura adimensional como:
+
+$Tˣ = \frac{T-Tₛ}{Tₗ-Tₛ}$ 
+
+Resulta 
+
+
+$hL=-kL\frac{\frac{∂T}{∂y}}{Tₗ-Tₛ} = k\frac{∂Tˣ}{∂yˣ}$ 
+
+Se define el número de Nusselt, que representa el gradiente de temperaturas adimensional en $y=0$:
+
+$Nu=\frac{hL}{k}=\frac{∂Tˣ}{∂yˣ}$"""
+
+# ╔═╡ fbd6c1ff-fd43-4dc5-b19b-acb485620a48
+md"""Para resolver los ejercicios del cruso, se cuenta con formulas para calcular el número de Nusselt en función de la geometría, el fluido y el flujo. Esta página presenta un recurso para visualizar la dependencia del coeficiente de convección con diferentes variables."""
 
 # ╔═╡ 62b260a4-07fa-4fd3-8a0e-491936815366
 md"""velocidad $v$  [$m/s$]"""
@@ -202,6 +219,8 @@ hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 # ╟─49f52775-42bc-4c77-9ad4-3ab50b9da45b
 # ╟─a341496c-8469-461e-a828-66746c622937
 # ╟─d5ffff65-56b2-4bda-b34c-e593c065d3ee
+# ╟─db33c58b-5987-49c7-b3c9-68a0a1e600f6
+# ╟─fbd6c1ff-fd43-4dc5-b19b-acb485620a48
 # ╟─62b260a4-07fa-4fd3-8a0e-491936815366
 # ╟─dd328cf6-b219-4a7f-874e-d66b1a87f6c3
 # ╟─f2c4cea9-15ca-4707-adb2-5941ef976945

@@ -1,6 +1,6 @@
 export Flow
 export intervec, intermat, regime
-export reynolds, grashoff, nusselt, _is_internal_flow
+export reynolds, grashoff, nusselt, _is_internal_flow, δCLt, δCLh
 
 
 """
@@ -146,6 +146,7 @@ Calculates the reynolds number from fluid properties, velocity and geometry.
 reynolds(surface::AbstractSurface, v::Real, fluid::AbstractFluid)
 reynolds(x::Flow)
 reynolds(x::ForcedConv)
+reynolds(x::Real,v::Real,ν::Real)
 ```
 
 # Example
@@ -171,7 +172,9 @@ function reynolds(x::Flow)
     V = char_speed(sup,v) ; L = char_length(sup) ; ν = viscocidad(flu)
     re = V * L / ν
     return re
-end    
+end
+reynolds(x::Real,v::Real,ν::Real) = v*x/ν
+   
 
 
 """
@@ -473,3 +476,27 @@ function nusselt(surf::Cylinder,flu::AbstractFluid,Tₛ::Real)
     
 end
 =#
+
+function δCLh(flu::AbstractFluid,x::Real,v::Real)
+    ν = viscocidad(flu)
+    re = reynolds(x,v,ν)
+    if re == 0
+        δ = 0
+    elseif re ≤ 500000
+        δ = 5*x/re^0.5
+    else
+        δ = 0.37*x/re^(1/5)
+    end
+    return δ
+end
+
+function δCLt(flu::AbstractFluid,x::Real,v::Real)
+    ν = viscocidad(flu) ; pr = prandlt(flu)
+    re = reynolds(x,v,ν)
+    if re ≤ 500000
+        δ = 5*x/(re^0.5*pr^(1/3))
+    else
+        δ = 0.37*x/re^(1/5)
+    end
+    return δ
+end

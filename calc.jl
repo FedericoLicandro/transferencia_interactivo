@@ -1,14 +1,20 @@
 using Interactive_HT, Plots
 
-fluido = Fluid("agua",320)
-v = 5
-X = 0:0.0005:0.1
-Δ = []
+fluido = Fluid("air",500)
+v = 10
+X = 0:0.0005:2
+Δt = []
+Δh = []
 n = length(X)
 for i in 1:n
     x = X[i]
-    δ = δCLt(fluido,x,v)
-    push!(Δ,δ)
+    δt = δCLt(fluido,x,v)*1000
+    δh = δCLh(fluido,x,v)*1000
+    push!(Δt,δt)
+    push!(Δh,δh)
 end
 
-plot(X,Δ)
+plot(X,[Δh,Δt], title="Capa limite", label=["Velocidad" "Temperatura"], linewidth=2)
+#plot!(legend=:)
+ylabel!("δ (mm)")
+xlabel!("x (mm)")

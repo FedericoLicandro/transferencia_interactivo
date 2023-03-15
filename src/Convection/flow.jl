@@ -493,7 +493,9 @@ end
 function δCLt(flu::AbstractFluid,x::Real,v::Real)
     ν = viscocidad(flu) ; pr = prandlt(flu)
     re = reynolds(x,v,ν)
-    if re ≤ 500000
+    if re == 0
+        δ = 0
+    elseif re ≤ 500000
         δ = 5*x/(re^0.5*pr^(1/3))
     else
         δ = 0.37*x/re^(1/5)

@@ -477,7 +477,9 @@ function nusselt(surf::Cylinder,flu::AbstractFluid,Tₛ::Real)
 end
 =#
 
-function δCLh(flu::AbstractFluid,x::Real,v::Real)
+function δCLh(flu∞::AbstractFluid,x::Real,v::Real,Tₛ::Real)
+    T = fluidtemp(flu∞) ; name = _get_fluid_name(flu∞)
+    Tf = (T+Tₛ)/2 ; flu = Fluid(name,Tf)
     ν = viscocidad(flu)
     re = reynolds(x,v,ν)
     if re == 0
@@ -490,15 +492,19 @@ function δCLh(flu::AbstractFluid,x::Real,v::Real)
     return δ
 end
 
-function δCLt(flu::AbstractFluid,x::Real,v::Real)
+function δCLt(flu∞::AbstractFluid,x::Real,v::Real,Tₛ::Real)
+    T = fluidtemp(flu∞) ; name = _get_fluid_name(flu∞)
+    Tf = (T+Tₛ)/2 ; flu = Fluid(name,Tf)
     ν = viscocidad(flu) ; pr = prandlt(flu)
     re = reynolds(x,v,ν)
     if re == 0
         δ = 0
     elseif re ≤ 500000
         δ = 5*x/(re^0.5*pr^(1/3))
-    else
+    elseif re < 10e8
         δ = 0.37*x/re^(1/5)
+    else
+        nothing
     end
     return δ
 end

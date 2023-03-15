@@ -105,6 +105,7 @@ Calculates the convection coefficient from flow properties and surface temperatu
 ### Methods
 ```
 h_conv(v::Real,sup::AbstractSurface, flu::AbstractFluid,Tₛ::Real)
+h_conv(v::Real,x::Real,flu::AbstractFluid,Ts::Real)
 h_conv(v::Real,sup::Wall,flu::AbstractFluid,Tₛ::Real)
 h_conv(flow::Flow,Tₛ::Real)
 h_conv(x::ForcedConv)
@@ -157,6 +158,21 @@ function h_conv(flow::Flow, Tₛ::Real)
 
     return h
 
+end
+function h_conv(v::Real,x::Real,flu::AbstractFluid,Ts::Real)
+    T = fluidtemp(flu)
+    Tf = (T+Ts)/2
+    name = _get_fluid_name(flu)
+    fluf = Fluid(name,Tf)
+    ν = viscocidad(fluf) ; pr = prandlt(fluf) ; k = conductividad(fluf)
+    re = x*v/ν
+    if re ≤ 500000
+        nu = 0.332*re^0.5*pr^0.33
+    elseif re < 10e8
+        nu = 0.0296*re^0.8*pr^0.33
+    end
+    h = nu*k/x
+    return h
 end
 
 

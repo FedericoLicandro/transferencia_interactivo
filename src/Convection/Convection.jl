@@ -18,7 +18,7 @@ export surface, regime, nusselt, reynolds, grashoff
 export AbstractSurface, AbstractPipeArray, AbstractPipe
 export Wall, Cylinder, Ilpipearray, Qupipearray, CircularPipe, Duct, ForcedConv
 export char_length, pipe_length, inclination, cylinder_angle, array_NL ,array_SL, array_St, quaxy_sd, curvradius, char_speed, _is_internal_flow, _is_vertical, _is_horizontal
-export δCLh, δCLt
+export δCLh, δCLt, capalimt, capalimh, convpunt
 
 
 struct Forced end
@@ -381,6 +381,18 @@ function iterateh(flow₁::Flow,flow₂::Flow;tol=0.01)
         ϵ = abs(Tₛ-Tₛᵃ)
     end
     return [h₁,h₂,Tₛ]    
+end
+
+function convpunt(flu∞::AbstractFluid,L::Real,v::Real,Tₛ::Real;n=200)
+    dx = L/n
+    X = 0:dx:L
+    hc = []
+    for i in 1:n+1
+        x = X[i]
+        h = h_conv(v,x,flu∞,Tₛ)
+        push!(hc,h)
+    end
+    return hc
 end
 
 

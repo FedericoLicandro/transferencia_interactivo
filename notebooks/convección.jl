@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.22
+# v0.19.16
 
 using Markdown
 using InteractiveUtils
@@ -24,7 +24,7 @@ Pkg.activate("../Project.toml");
 using PlutoUI
 
 # ╔═╡ 70a372cf-d9f0-4e12-9a1a-4c7638143e79
-using Interactive_HT
+using Interactive_HT, Plots
 
 # ╔═╡ dd51a900-6c85-11ed-12f3-e195f1415dc3
 md"""### Material complementario e interactivo sobre Convección."""
@@ -60,7 +60,7 @@ md"""Si $x$ es la dirección perpendicular a y en la capa sobre la superficie, s
 md"""Igualando la ley de enfriamiento de Newton a la ley de fourier en $y=0$ se obtiene"""
 
 # ╔═╡ d5ffff65-56b2-4bda-b34c-e593c065d3ee
-md"""$h=-k\frac{\frac{∂T}{∂y}}{Tₗ-Tₛ}$"""
+md"""$h=-k\frac{\frac{∂T}{∂y}|_{y=0}}{Tₗ-Tₛ}$"""
 
 # ╔═╡ db33c58b-5987-49c7-b3c9-68a0a1e600f6
 md""" Multiplicando ambos lados de la igualdad por una longitúd característica $L$ y definiendo la temperatura adimensional como:
@@ -70,14 +70,23 @@ $Tˣ = \frac{T-Tₛ}{Tₗ-Tₛ}$
 Resulta 
 
 
-$hL=-kL\frac{\frac{∂T}{∂y}}{Tₗ-Tₛ} = k\frac{∂Tˣ}{∂yˣ}$ 
+$hL=-kL\frac{\frac{∂T}{∂y}|_{y=0}}{Tₗ-Tₛ} = k\frac{∂Tˣ}{∂yˣ}|_{y=0}$ 
 
 Se define el número de Nusselt, que representa el gradiente de temperaturas adimensional en $y=0$:
 
-$Nu=\frac{hL}{k}=\frac{∂Tˣ}{∂yˣ}$"""
+$Nu=\frac{hL}{k}=\frac{∂Tˣ}{∂yˣ}|_{y=0}$"""
 
 # ╔═╡ fbd6c1ff-fd43-4dc5-b19b-acb485620a48
 md"""Para resolver los ejercicios del cruso, se cuenta con formulas para calcular el número de Nusselt en función de la geometría, el fluido y el flujo. Esta página presenta un recurso para visualizar la dependencia del coeficiente de convección con diferentes variables."""
+
+# ╔═╡ ac37cb80-c00c-4261-a660-988b9135f178
+md""" ### Placa plana con flujo paralelo"""
+
+# ╔═╡ e809c5ba-0d68-498c-b367-7f2e1f20e6df
+md"""El primer ejemplo que se va a analizar es el intercambio convectivo que induce una circulación de aire sobre una placa plana que está a temperatura uniforme. """
+
+# ╔═╡ f09ff995-b136-4f3b-9656-c0182a416b85
+md"""Los switches de abajo permiten modificar la temperatura y velocidad del aire que circula sobre la placa, más abajo se permite modificar los parametros de la placa."""
 
 # ╔═╡ 62b260a4-07fa-4fd3-8a0e-491936815366
 md"""velocidad $v$  [$m/s$]"""
@@ -94,11 +103,57 @@ md"""Temperatura de aire $T$ [$K$]"""
 # ╔═╡ 4a3f428e-a326-4b0d-b9fd-5c0d377f8088
 air = Gas("air",T)
 
-# ╔═╡ ac37cb80-c00c-4261-a660-988b9135f178
-md""" ### Placa plana"""
-
 # ╔═╡ 0b01b523-56f1-4663-92b2-e1ddc481aa93
+# ╠═╡ disabled = true
+#=╠═╡
 Show(MIME"image/png"(),read("paredplana.png"))
+  ╠═╡ =#
+
+# ╔═╡ 3f425661-daab-4d08-963d-e98d8abf092c
+md"""Temperatura de superficie $Tₛ \ [K]$"""
+
+# ╔═╡ af8579a4-f284-40ed-8782-dd8064b86cdd
+@bind Tₛ Slider(200:10:600, default = 300, show_value = true)
+
+# ╔═╡ 2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
+md"""Para el caso de la placa plana, se puede estimar el espesor de las capas limites hidrodinámica $δ$ y termodinámica $δₜ$, utilizando las siguientes correlaciones para flujo laminar y turbulento.
+
+Laminar:
+
+$\frac{δ(x)}{x}=5Reₓ^{1/2} \ \ \ \ \ \ \frac{δ(x)}{δₜ(x)} \approx Pr^{1/3}$
+
+Turbulento:
+
+$\frac{δ(x)}{x}=0.37Reₓ^{1/5} \ \ \ \ \ δ(x) \approx δₜ(x)$
+
+"""
+
+# ╔═╡ 8ba59a86-3263-4f5e-8825-e72c096f83bd
+md"""En el material practico del curso tambien se cuentan con formulaciones para calcular el número de Nusselt local en la placa plana, en regimenes laminar y turbulento.
+
+Laminar:
+
+$\frac{h(x)L}{k}=Nu(x)=0.334*Reₓ^{1/2}Pr^{1/3}$
+
+Turbulento:
+
+$\frac{h(x)L}{k}=Nu(x)=0.0296Reₓ^{4/5}Pr^{1/3}$
+
+"""
+
+# ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
+md"""Graficando en la plana definida, se obtiene:"""
+
+# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
+begin
+Lₚ=2;
+X=0:Lₚ/200:Lₚ;
+δt = capalimt(air,Lₚ,v,Tₛ);
+δh = capalimh(air,Lₚ,v,Tₛ);
+hpx = convpunt(air,Lₚ,v,Tₛ);
+plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
+plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
+end
 
 # ╔═╡ b7f596c7-4bce-493a-8359-297797233f5b
 md"""Largo de la placa $L$ [$m$]:"""
@@ -108,15 +163,6 @@ md"""Largo de la placa $L$ [$m$]:"""
 
 # ╔═╡ ca197510-73c9-4629-b1f1-55d603c9a00c
 pared = Wall(L)
-
-# ╔═╡ 3f425661-daab-4d08-963d-e98d8abf092c
-md"""Temperatura de superficie $Tₛ \ [K]$"""
-
-# ╔═╡ af8579a4-f284-40ed-8782-dd8064b86cdd
-@bind Tₛ Slider(200:10:600, default = 300, show_value = true)
-
-# ╔═╡ 2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
-md"""El coeficiente de intercambio de calor por convección resulta:"""
 
 # ╔═╡ 72275dc6-518d-4574-a5de-d9a584a646b5
 begin
@@ -221,19 +267,24 @@ hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 # ╟─d5ffff65-56b2-4bda-b34c-e593c065d3ee
 # ╟─db33c58b-5987-49c7-b3c9-68a0a1e600f6
 # ╟─fbd6c1ff-fd43-4dc5-b19b-acb485620a48
+# ╟─ac37cb80-c00c-4261-a660-988b9135f178
+# ╟─e809c5ba-0d68-498c-b367-7f2e1f20e6df
+# ╟─f09ff995-b136-4f3b-9656-c0182a416b85
 # ╟─62b260a4-07fa-4fd3-8a0e-491936815366
 # ╟─dd328cf6-b219-4a7f-874e-d66b1a87f6c3
 # ╟─f2c4cea9-15ca-4707-adb2-5941ef976945
 # ╟─667d4720-a015-41aa-9f1b-b628da7cfb73
 # ╟─4a3f428e-a326-4b0d-b9fd-5c0d377f8088
-# ╟─ac37cb80-c00c-4261-a660-988b9135f178
 # ╟─0b01b523-56f1-4663-92b2-e1ddc481aa93
-# ╟─b7f596c7-4bce-493a-8359-297797233f5b
-# ╟─d8ca76b4-7289-4f9e-a838-34cc009a3a7b
-# ╟─ca197510-73c9-4629-b1f1-55d603c9a00c
 # ╟─3f425661-daab-4d08-963d-e98d8abf092c
 # ╟─af8579a4-f284-40ed-8782-dd8064b86cdd
+# ╟─1a999f12-d7cd-4463-8864-34a8367ff92c
 # ╟─2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
+# ╟─8ba59a86-3263-4f5e-8825-e72c096f83bd
+# ╟─e0368060-f709-4c49-bcab-7cfc0343c912
+# ╟─b7f596c7-4bce-493a-8359-297797233f5b
+# ╟─ca197510-73c9-4629-b1f1-55d603c9a00c
+# ╟─d8ca76b4-7289-4f9e-a838-34cc009a3a7b
 # ╟─72275dc6-518d-4574-a5de-d9a584a646b5
 # ╟─48416af6-5f8a-4bbe-b949-84c0f80c163f
 # ╟─b5741bdd-e14c-4e79-adeb-2c50d8626ebf

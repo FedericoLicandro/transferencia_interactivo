@@ -1,6 +1,6 @@
 export Flow
 export intervec, intermat, regime
-export reynolds, grashoff, nusselt, _is_internal_flow, δCLt, δCLh
+export reynolds, grashoff, nusselt, _is_internal_flow, δCLt, δCLh, capalimh, capalimt
 
 
 """
@@ -508,3 +508,28 @@ function δCLt(flu∞::AbstractFluid,x::Real,v::Real,Tₛ::Real)
     end
     return δ
 end
+
+function capalimt(flu∞::AbstractFluid,L::Real,v::Real,Tₛ::Real;n=200)
+    dx = L/n
+    X = 0:dx:L
+    Δt = []
+    for i in 1:n+1
+        x = X[i]
+        δt = δCLt(flu∞,x,v,Tₛ)*1000
+        push!(Δt,δt)
+    end
+    return Δt
+end
+
+function capalimh(flu∞::AbstractFluid,L::Real,v::Real,Tₛ::Real;n=200)
+    dx = L/n
+    X = 0:dx:L
+    Δh = []
+    for i in 1:n+1
+        x = X[i]
+        δh = δCLh(flu∞,x,v,Tₛ)*1000
+        push!(Δh,δh)
+    end
+    return Δh
+end
+

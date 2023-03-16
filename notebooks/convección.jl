@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.16
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
@@ -115,6 +115,17 @@ md"""Temperatura de superficie $Tₛ \ [K]$"""
 # ╔═╡ af8579a4-f284-40ed-8782-dd8064b86cdd
 @bind Tₛ Slider(200:10:600, default = 300, show_value = true)
 
+# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
+begin
+Lₚ=2;
+X=0:Lₚ/200:Lₚ;
+δt = capalimt(air,Lₚ,v,Tₛ);
+δh = capalimh(air,Lₚ,v,Tₛ);
+hpx = convpunt(air,Lₚ,v,Tₛ);
+plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
+plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
+end
+
 # ╔═╡ 2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
 md"""Para el caso de la placa plana, se puede estimar el espesor de las capas limites hidrodinámica $δ$ y termodinámica $δₜ$, utilizando las siguientes correlaciones para flujo laminar y turbulento.
 
@@ -143,17 +154,6 @@ $\frac{h(x)L}{k}=Nu(x)=0.0296Reₓ^{4/5}Pr^{1/3}$
 
 # ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
 md"""Graficando en la plana definida, se obtiene:"""
-
-# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
-begin
-Lₚ=2;
-X=0:Lₚ/200:Lₚ;
-δt = capalimt(air,Lₚ,v,Tₛ);
-δh = capalimh(air,Lₚ,v,Tₛ);
-hpx = convpunt(air,Lₚ,v,Tₛ);
-plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
-plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
-end
 
 # ╔═╡ b7f596c7-4bce-493a-8359-297797233f5b
 md"""Largo de la placa $L$ [$m$]:"""
@@ -251,8 +251,8 @@ hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 # ╔═╡ Cell order:
 # ╟─fb5fd8bb-cbf2-4df7-b982-10cada4dc231
 # ╟─94211d49-15b3-4e96-9134-aa39e77c1743
-# ╟─4be4ba4a-2bdf-4dd1-8f80-36912a5361eb
-# ╟─70a372cf-d9f0-4e12-9a1a-4c7638143e79
+# ╠═4be4ba4a-2bdf-4dd1-8f80-36912a5361eb
+# ╠═70a372cf-d9f0-4e12-9a1a-4c7638143e79
 # ╟─dd51a900-6c85-11ed-12f3-e195f1415dc3
 # ╟─0873aec3-5c1e-435c-a965-eb74ddc3c551
 # ╟─bb14fae8-7e44-41ca-8a2e-5189041dab08
@@ -273,12 +273,12 @@ hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 # ╟─62b260a4-07fa-4fd3-8a0e-491936815366
 # ╟─dd328cf6-b219-4a7f-874e-d66b1a87f6c3
 # ╟─f2c4cea9-15ca-4707-adb2-5941ef976945
-# ╟─667d4720-a015-41aa-9f1b-b628da7cfb73
-# ╟─4a3f428e-a326-4b0d-b9fd-5c0d377f8088
+# ╠═667d4720-a015-41aa-9f1b-b628da7cfb73
+# ╠═4a3f428e-a326-4b0d-b9fd-5c0d377f8088
 # ╟─0b01b523-56f1-4663-92b2-e1ddc481aa93
 # ╟─3f425661-daab-4d08-963d-e98d8abf092c
-# ╟─af8579a4-f284-40ed-8782-dd8064b86cdd
-# ╟─1a999f12-d7cd-4463-8864-34a8367ff92c
+# ╠═af8579a4-f284-40ed-8782-dd8064b86cdd
+# ╠═1a999f12-d7cd-4463-8864-34a8367ff92c
 # ╟─2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
 # ╟─8ba59a86-3263-4f5e-8825-e72c096f83bd
 # ╟─e0368060-f709-4c49-bcab-7cfc0343c912

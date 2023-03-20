@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.16
+# v0.19.22
 
 using Markdown
 using InteractiveUtils
@@ -36,22 +36,22 @@ md"""El material que se presenta en esta página es un complemento de las clases
 md"""La transferencia de calor por convección es el mecanismo de transferencia de energía térmica, que se da en un fluido cuando presenta diferente temperatura y movimiento relativo con un elemento del espacio (no necesariamente físico, puede ser una superficie imaginaria dentro del fluido). La convección es la convinación de la conducción en el medio fluido (difusión de energía con constante k) y la advección (transporte de enrgía). La conducción es la transferencia de energía que se da por las interacciones (choques, vibraciones, movimientos aleatorios entre capas de fluid) entre partículas de mayor energía cinética (zonas de mayor temperatura) con particulas de menor nivel energético. La advección es la transferencia de energía por transporte de particulas que tienen más energía cinética a zonas donde las particulas tienen menos energía cinética. En conclusión, para que se den los mecanismos de transferencia de calor por convección se necesitan: zonas con particulas con diferentes energías cinéticas, que se representa con la existencia de un gradiente de temperaturas, un medio que permita la conductividad de calor y un mecanismo de transporte que produzca la advección (movimiento relativo)."""
 
 # ╔═╡ 7c22d65d-e3d9-41c5-9761-5d77ae33e5c2
-md"""En el curso se le presta especial atención al intercambio entre un fluido en movimiento y una superficie física que lo limita, a diferentes temperaturas. En este caso, el contacto hidrodinámico entre la superficie y el fluido, por la condición de no deslizamiento, genera una capa limite de velocidades, donde la velocidad varia desde 0 y $u₀$, donde $u₀$ es la velocidad lejos de la superficie. Si además la temperatura de la superficie $Tₛ$ y la del fluido $T₀$ son diferentes, se genera una capa limite de temperaturas. La convección entre el fluido y la superficie se da por la difusión y advección del fluido en la capa limite de temperaturas. """
+md"""En el curso se le presta especial atención al intercambio entre un fluido en movimiento y una superficie física que lo limita, a diferentes temperaturas. En este caso, el contacto hidrodinámico entre la superficie y el fluido, por la condición de no deslizamiento, genera una capa limite de velocidades, donde la velocidad varia desde $0$ y $u_{\infty}$, donde $u_{\infty}$ es la velocidad lejos de la superficie. Si además la temperatura de la superficie $T_s$ y la del fluido $T_{\infty}$ son diferentes, se genera una capa limite de temperaturas. La convección entre el fluido y la superficie se da por la difusión y advección del fluido en la capa limite de temperaturas. """
 
 # ╔═╡ 70e784b2-4858-4241-95a2-8eab32618922
-md"""La ley de enfriamiento de Newton modela la potencia calorífica intercambiada entre una superficie a una temperatura $Tₛ$ y un fluido a temperatura $Tₗ$:"""
+md"""La ley de enfriamiento de Newton modela la potencia calorífica intercambiada entre una superficie a una temperatura $Tₛ$ y un fluido a temperatura $T_{\infty}$:"""
 
 # ╔═╡ 49e8ae4b-d68c-418b-b4f4-ae5f56877c75
-md"""$q''=h(Tₗ-Tₛ)$"""
+md"""$q''=h(T_{\infty}-Tₛ)$"""
 
 # ╔═╡ 24a105fd-4ae9-4a17-b8bc-5510021a85b2
-md"""Donde $q''$ es la tasa de flujo calorifico (W/m²) y $h$ es el coeficiente de convección (W/m²K). El coeficiente $h$ depende de las condiciones de la capa límite, que engloban propiedades del fluido, características del flujo y de la geometría."""
+md"""Donde $q''$ es la tasa de flujo calorifico ($W/m^2$) y $h$ es el coeficiente de convección (W/m²K). El coeficiente $h$ depende de las condiciones de la capa límite, que engloban propiedades del fluido, características del flujo y de la geometría."""
 
 # ╔═╡ ae77ceff-e972-414a-b359-8fbdcb3c48e7
 md"""Los mecanismos difusivos de calor gobiernan la transferencia en las zonas de baja velocidad, ya que baja velocidad implica poco transporte. En particular, si se analiza la capa de fluido inmediatamente sobre la superficie (siendo $y$ la coordenada que mide la distancia perpendicular a la superficie en cada uno de sus puntos, es la capa correspondiente a $y=0$), por condición de adherencia del fluido, la velocidad es nula. En esa capa la convección esta dada completamente por la difusión de calor, que se puede modelar con la ley de Fourier."""
 
 # ╔═╡ 98154d1d-e0d1-400b-8d23-ab344dc8093a
-md"""$q''=-k∇T$"""
+md"""$q''=-k∇T|_{y=0}$"""
 
 # ╔═╡ 49f52775-42bc-4c77-9ad4-3ab50b9da45b
 md"""Si $x$ es la dirección perpendicular a y en la capa sobre la superficie, se puede ver facilmente que el gradiente de la temperatura es igual a la derivada en $y$, ya que T(x,y=0)=Tₛ"""
@@ -60,21 +60,21 @@ md"""Si $x$ es la dirección perpendicular a y en la capa sobre la superficie, s
 md"""Igualando la ley de enfriamiento de Newton a la ley de fourier en $y=0$ se obtiene"""
 
 # ╔═╡ d5ffff65-56b2-4bda-b34c-e593c065d3ee
-md"""$h=-k\frac{\frac{∂T}{∂y}|_{y=0}}{Tₗ-Tₛ}$"""
+md"""$h=-k\frac{\frac{∂T}{∂y}|_{y=0}}{T_{\infty}-T_s}$"""
 
 # ╔═╡ db33c58b-5987-49c7-b3c9-68a0a1e600f6
 md""" Multiplicando ambos lados de la igualdad por una longitúd característica $L$ y definiendo la temperatura adimensional como:
 
-$Tˣ = \frac{T-Tₛ}{Tₗ-Tₛ}$ 
+$T^* = \frac{T-Tₛ}{Tₗ-Tₛ}$ 
 
 Resulta 
 
 
-$hL=-kL\frac{\frac{∂T}{∂y}|_{y=0}}{Tₗ-Tₛ} = k\frac{∂Tˣ}{∂yˣ}|_{y=0}$ 
+$hL=-kL\frac{\frac{∂T}{∂y}|_{y=0}}{T_{\infty}-T_s} = k\frac{∂T^*}{∂y^*}|_{y=0}$ 
 
 Se define el número de Nusselt, que representa el gradiente de temperaturas adimensional en $y=0$:
 
-$Nu=\frac{hL}{k}=\frac{∂Tˣ}{∂yˣ}|_{y=0}$"""
+$Nu=\frac{hL}{k}=\frac{∂T^*}{∂y^*}|_{y=0}$"""
 
 # ╔═╡ fbd6c1ff-fd43-4dc5-b19b-acb485620a48
 md"""Para resolver los ejercicios del cruso, se cuenta con formulas para calcular el número de Nusselt en función de la geometría, el fluido y el flujo. Esta página presenta un recurso para visualizar la dependencia del coeficiente de convección con diferentes variables."""
@@ -86,16 +86,16 @@ md""" ### Placa plana con flujo paralelo"""
 md"""El primer ejemplo que se va a analizar es el intercambio convectivo que induce una circulación de aire sobre una placa plana que está a temperatura uniforme. """
 
 # ╔═╡ f09ff995-b136-4f3b-9656-c0182a416b85
-md"""Los switches de abajo permiten modificar la temperatura y velocidad del aire que circula sobre la placa, más abajo se permite modificar los parametros de la placa."""
+md"""Los controles deslizantes permiten modificar la temperatura $T_{\infty}$ y velocidad $v_{\infty}$ del aire que circula sobre la placa y la temperatura superficial de la placa $T_s$."""
 
 # ╔═╡ 62b260a4-07fa-4fd3-8a0e-491936815366
-md"""velocidad $v$  [$m/s$]"""
+md"""velocidad $v_{\infty}$  [$m/s$]"""
 
 # ╔═╡ dd328cf6-b219-4a7f-874e-d66b1a87f6c3
 @bind v Slider(1:0.5:10, default = 6, show_value=true)
 
 # ╔═╡ f2c4cea9-15ca-4707-adb2-5941ef976945
-md"""Temperatura de aire $T$ [$K$]"""
+md"""Temperatura de aire $T_{\infty}$ [$K$]"""
 
 # ╔═╡ 667d4720-a015-41aa-9f1b-b628da7cfb73
 @bind T Slider(200:10:600, default = 300 , show_value = true)
@@ -109,19 +109,8 @@ md"""Temperatura de superficie $Tₛ \ [K]$"""
 # ╔═╡ af8579a4-f284-40ed-8782-dd8064b86cdd
 @bind Tₛ Slider(200:10:600, default = 300, show_value = true)
 
-# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
-begin
-Lₚ=2;
-X=0:Lₚ/200:Lₚ;
-δt = capalimt(air,Lₚ,v,Tₛ);
-δh = capalimh(air,Lₚ,v,Tₛ);
-hpx = convpunt(air,Lₚ,v,Tₛ);
-plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
-plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
-end
-
 # ╔═╡ 2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
-md"""Para el caso de la placa plana, se puede estimar el espesor de las capas limites hidrodinámica $δ$ y termodinámica $δₜ$, utilizando las siguientes correlaciones para flujo laminar y turbulento.
+md"""Para el caso de la placa plana, se puede estimar el espesor de las capas limites hidrodinámica $(δ)$ y termodinámica $(δₜ)$, utilizando las siguientes correlaciones para flujo laminar y turbulento.
 
 Laminar:
 
@@ -138,16 +127,27 @@ md"""En el material practico del curso tambien se cuentan con formulaciones para
 
 Laminar:
 
-$\frac{h(x)L}{k}=Nu(x)=0.334*Reₓ^{1/2}Pr^{1/3}$
+$\frac{h_xL}{k}=Nu_x=0.334Re_x^{1/2}Pr^{1/3}$
 
 Turbulento:
 
-$\frac{h(x)L}{k}=Nu(x)=0.0296Reₓ^{4/5}Pr^{1/3}$
+$\frac{h_xL}{k}=Nu_x=0.0296Re_x^{4/5}Pr^{1/3}$
 
 """
 
 # ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
 md"""Graficando en la plana definida, se obtiene:"""
+
+# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
+begin
+Lₚ=2;
+X=0:Lₚ/200:Lₚ;
+δt = capalimt(air,Lₚ,v,Tₛ);
+δh = capalimh(air,Lₚ,v,Tₛ);
+hpx = convpunt(air,Lₚ,v,Tₛ);
+plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
+plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
+end
 
 # ╔═╡ b7f596c7-4bce-493a-8359-297797233f5b
 md"""Largo de la placa $L$ [$m$]:"""
@@ -161,11 +161,13 @@ pared = Wall(L)
 # ╔═╡ 72275dc6-518d-4574-a5de-d9a584a646b5
 begin
 hₚ = trunc(h_conv(v,pared,air,Tₛ), digits=2);
-md"$hₚ W/m²K"
+md"""
+Resultado: $\overline{h}=$ $hₚ  W/m²K
+"""
 end
 
 # ╔═╡ 48416af6-5f8a-4bbe-b949-84c0f80c163f
-md""" ### Cilindro """
+md""" ### Cilindro con flujo cruzado"""
 
 # ╔═╡ b5741bdd-e14c-4e79-adeb-2c50d8626ebf
 Show(MIME"image/png"(),read("cilindro.png"))
@@ -269,18 +271,23 @@ hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 # ╟─f2c4cea9-15ca-4707-adb2-5941ef976945
 # ╟─667d4720-a015-41aa-9f1b-b628da7cfb73
 # ╟─4a3f428e-a326-4b0d-b9fd-5c0d377f8088
-# ╟─0b01b523-56f1-4663-92b2-e1ddc481aa93
 # ╟─3f425661-daab-4d08-963d-e98d8abf092c
 # ╟─af8579a4-f284-40ed-8782-dd8064b86cdd
+# ╟─98860479-b9fe-4517-8ead-fd472584c7ec
+# ╟─cbc04dfd-cf6a-4a9b-b130-6588c2744abe
+# ╟─e0368060-f709-4c49-bcab-7cfc0343c912
 # ╟─1a999f12-d7cd-4463-8864-34a8367ff92c
 # ╟─2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
 # ╟─8ba59a86-3263-4f5e-8825-e72c096f83bd
-# ╟─e0368060-f709-4c49-bcab-7cfc0343c912
+# ╟─58068069-b5f0-4ba6-8fd3-a7498823599f
+# ╟─efd1c14e-1076-472a-b2b1-3db5df31251f
+# ╟─d3441c74-19e7-4dea-939c-480b29b9fa3e
+# ╟─b255992c-2038-4e74-904d-aea7deeed64b
 # ╟─b7f596c7-4bce-493a-8359-297797233f5b
 # ╟─ca197510-73c9-4629-b1f1-55d603c9a00c
 # ╟─d8ca76b4-7289-4f9e-a838-34cc009a3a7b
 # ╟─72275dc6-518d-4574-a5de-d9a584a646b5
-# ╟─48416af6-5f8a-4bbe-b949-84c0f80c163f
+# ╠═48416af6-5f8a-4bbe-b949-84c0f80c163f
 # ╟─b5741bdd-e14c-4e79-adeb-2c50d8626ebf
 # ╟─90b8271b-8878-4341-a80f-3c09e40f5348
 # ╟─fc57526a-180d-40a3-aa8f-53d7f5ddbccf

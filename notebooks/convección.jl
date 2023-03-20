@@ -103,17 +103,22 @@ md"""Temperatura de aire $T$ [$K$]"""
 # ╔═╡ 4a3f428e-a326-4b0d-b9fd-5c0d377f8088
 air = Gas("air",T)
 
-# ╔═╡ 0b01b523-56f1-4663-92b2-e1ddc481aa93
-# ╠═╡ disabled = true
-#=╠═╡
-Show(MIME"image/png"(),read("paredplana.png"))
-  ╠═╡ =#
-
 # ╔═╡ 3f425661-daab-4d08-963d-e98d8abf092c
 md"""Temperatura de superficie $Tₛ \ [K]$"""
 
 # ╔═╡ af8579a4-f284-40ed-8782-dd8064b86cdd
 @bind Tₛ Slider(200:10:600, default = 300, show_value = true)
+
+# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
+begin
+Lₚ=2;
+X=0:Lₚ/200:Lₚ;
+δt = capalimt(air,Lₚ,v,Tₛ);
+δh = capalimh(air,Lₚ,v,Tₛ);
+hpx = convpunt(air,Lₚ,v,Tₛ);
+plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
+plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
+end
 
 # ╔═╡ 2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
 md"""Para el caso de la placa plana, se puede estimar el espesor de las capas limites hidrodinámica $δ$ y termodinámica $δₜ$, utilizando las siguientes correlaciones para flujo laminar y turbulento.
@@ -143,17 +148,6 @@ $\frac{h(x)L}{k}=Nu(x)=0.0296Reₓ^{4/5}Pr^{1/3}$
 
 # ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
 md"""Graficando en la plana definida, se obtiene:"""
-
-# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
-begin
-Lₚ=2;
-X=0:Lₚ/200:Lₚ;
-δt = capalimt(air,Lₚ,v,Tₛ);
-δh = capalimh(air,Lₚ,v,Tₛ);
-hpx = convpunt(air,Lₚ,v,Tₛ);
-plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
-plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
-end
 
 # ╔═╡ b7f596c7-4bce-493a-8359-297797233f5b
 md"""Largo de la placa $L$ [$m$]:"""

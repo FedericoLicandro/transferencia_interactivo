@@ -109,26 +109,6 @@ md"""Temperatura de superficie $Tₛ \ [K]$"""
 # ╔═╡ af8579a4-f284-40ed-8782-dd8064b86cdd
 @bind Tₛ Slider(200:10:600, default = 300, show_value = true)
 
-# ╔═╡ 98860479-b9fe-4517-8ead-fd472584c7ec
-md"""Para el caso de Placa plana, las propiedades del fluido se evaluan a $T_{film}=(T_1+T_2)/2$"""
-
-# ╔═╡ cbc04dfd-cf6a-4a9b-b130-6588c2744abe
-airf = Gas("air",(T+Tₛ)/2)
-
-# ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
-md"""Graficando según $x$ las capas limites de velocidad y temperatura y el coeficiente de convección puntual en una placa plana de $2m$ de largo, se obtiene:"""
-
-# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
-begin
-Lₚ=2;
-X=0:Lₚ/200:Lₚ;
-δt = capalimt(air,Lₚ,v,Tₛ);
-δh = capalimh(air,Lₚ,v,Tₛ);
-hpx = convpunt(air,Lₚ,v,Tₛ);
-plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
-plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
-end
-
 # ╔═╡ 2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
 md"""Para el caso de la placa plana, se puede estimar el espesor de las capas limites hidrodinámica $(δ)$ y termodinámica $(δₜ)$, utilizando las siguientes correlaciones para flujo laminar y turbulento.
 
@@ -155,35 +135,19 @@ $\frac{h_xL}{k}=Nu_x=0.0296Re_x^{4/5}Pr^{1/3}$
 
 """
 
-# ╔═╡ 58068069-b5f0-4ba6-8fd3-a7498823599f
-md"""Se puede observar que en la zona laminar el coeficiente de convección es disminuye con $x$. Esto se debe al aumento del espesor de la capa límite de temperatura. Cerca del borde de incidencia del flujo ($x=0$) el espesor de la capa limite es muy chico, al ser la diferencia de temperaturas entre el fluido fuera de la capa limite y la superficie uniforme en $x$, un menor espesor de capa limite implica mayores gradientes de temperatura (se debe alcanzar el mismo cambio de temperatura en menos recorrido). El caso extremo de $x=0$ resulta en $\frac{∂T^*}{∂y^*}|_{y=0}\rightarrow \infty$, por lo tanto el coeficiente de convección tiende a infinito en $x=0$. Sin embargo, cuando se alcanza el régimen turbulento aumentan tanto el espesor de la capa limite como el coeficiente de convección. Este fenomeno se explica por el incremento de transferencia por desplazamientos entre capas de fluido cuando se alcanza el régimen turbulento. A pesar de que el total de la variación de temperatura se da en un espesor mayor, el incremento de mezcla tiende a uniformizar la temperatura dentro de la capa limite, resultando en gradientes de temperatura mayores en $y=0$, como muestra la figura 1"""
+# ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
+md"""Graficando en la plana definida, se obtiene:"""
 
-# ╔═╡ efd1c14e-1076-472a-b2b1-3db5df31251f
+# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
 begin
-fig = Show(MIME"image/png"(),read("capa_limite_conveccion.png"))
-md"""
-$fig
-**Figura 1** Perfiles de temperatura en capa limite de temperatura.
-"""
+Lₚ=2;
+X=0:Lₚ/200:Lₚ;
+δt = capalimt(air,Lₚ,v,Tₛ);
+δh = capalimh(air,Lₚ,v,Tₛ);
+hpx = convpunt(air,Lₚ,v,Tₛ);
+plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
+plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
 end
-
-# ╔═╡ d3441c74-19e7-4dea-939c-480b29b9fa3e
-md"""Se recomienda también observar como varían los espesores de la capa limite y punto de transición con la viscocidad y la velocidad. ¿Qué explicación le encuentra a los fenomenos observados?"""
-
-# ╔═╡ b255992c-2038-4e74-904d-aea7deeed64b
-md"""Como la temperatura de la placa es uniforme, el promedio ($\overline{h}$) de los $h_x$ se puede utilizar para calcular el calor intercambiado por convección entre la placa y el aire, ya que se cumple
-
-$hA(T_s-T_{\infty})=\int_S h_x(T_s-T_{\infty})dS \Longleftrightarrow h=\frac{1}{A}\int_S h_xdS = \overline{h}$ 
-
-Donde $A$ es el area de la superficie $S$, que es la cara expuesta de la placa. Observar que si la diferencia de temperaturas no fuese uniforme, no se puede sacar para afuera de la integral el término $(T_s-T_{\infty})$, por lo que debe ponderarse por la diferencia de temperaturas.
-
-Asumiendo que la placa es suficientemente ancha como para considerar la mayoría de la capa limite inafectada por los bordes correspondientes al ancho de la placa (dirección $z$ perpendicular a la figura 1), se puede reducir la dependencia espacial del coeficiente de convección puntual a $h_x(x,z)=h(x)$, la integral en la superficie $S$ resulta
-
-$\overline{h}=\frac{B}{B.L}\int_0^Lh_x(x)dx=\frac{1}{L}\int_0^Lh_x(x)dx$
-
-Donde $B$ es el ancho y $L$ el largo de la placa. El siguiente control deslizante permite calcular el coeficiente de convección promedio para placas de diferentes largos, dadas la velocidad, temperatura y temperatura de superficie impuestas por los controles deslizantes anteriores.
-
-"""
 
 # ╔═╡ b7f596c7-4bce-493a-8359-297797233f5b
 md"""Largo de la placa $L$ [$m$]:"""

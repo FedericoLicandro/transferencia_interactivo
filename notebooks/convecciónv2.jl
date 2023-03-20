@@ -109,6 +109,20 @@ md"""Temperatura de superficie $Tₛ \ [K]$"""
 # ╔═╡ af8579a4-f284-40ed-8782-dd8064b86cdd
 @bind Tₛ Slider(200:10:600, default = 300, show_value = true)
 
+# ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
+md"""Graficando en la plana definida, se obtiene:"""
+
+# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
+begin
+Lₚ=2;
+X=0:Lₚ/200:Lₚ;
+δt = capalimt(air,Lₚ,v,Tₛ);
+δh = capalimh(air,Lₚ,v,Tₛ);
+hpx = convpunt(air,Lₚ,v,Tₛ);
+plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
+plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
+end
+
 # ╔═╡ 2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
 md"""Para el caso de la placa plana, se puede estimar el espesor de las capas limites hidrodinámica $(δ)$ y termodinámica $(δₜ)$, utilizando las siguientes correlaciones para flujo laminar y turbulento.
 
@@ -135,19 +149,11 @@ $\frac{h_xL}{k}=Nu_x=0.0296Re_x^{4/5}Pr^{1/3}$
 
 """
 
-# ╔═╡ e0368060-f709-4c49-bcab-7cfc0343c912
-md"""Graficando en la plana definida, se obtiene:"""
+# ╔═╡ 99b62194-d298-41bd-b5b5-eb8c63f809ff
+md"""En la zona laminar el coeficiente de convección local decrece con $x$. Como el espesor de la capa limite crece con $x$, se necesita un menor gradiente de temperaturas dentro de la capa limite para que la temperatura varíe desde $T_s$ a $T_{\infty}$. Cuando el flujo transiciona a regimen turbulento, el coeficiente de convección aumenta bruscamente, a pesar de que tambien aumenta el espesor de la capa limite. Debido a la mezcla transversal por turbulencia, la temperatura tiende a uniformisarse mucho más facilmente despues de la transición, de esta manera el gradiente de temperatura en $y=0$ tiende a ser mayor que en la zona laminar, como muestra la siguiente figura:"""
 
-# ╔═╡ 1a999f12-d7cd-4463-8864-34a8367ff92c
-begin
-Lₚ=2;
-X=0:Lₚ/200:Lₚ;
-δt = capalimt(air,Lₚ,v,Tₛ);
-δh = capalimh(air,Lₚ,v,Tₛ);
-hpx = convpunt(air,Lₚ,v,Tₛ);
-plot(X,[δh,δt], title="Capa limite y coef de convección", label=["Velocidad" "Temperatura"], linewidth=2, ylabel = "δ [mm]", xlabel="x [m] ", ylims=(0,50),xlims=(0,2))
-plot!(twinx(), X, hpx,color=:green, ylabel="h [W/m²K]",label="Coef. Conv.", ylims=(0,50),xlims=(0,2))
-end
+# ╔═╡ ae55a9b9-8250-4e03-a1bd-9d454f4d5651
+Show(MIME"image/png"(),read("capa_limite_conveccion.png"))
 
 # ╔═╡ b7f596c7-4bce-493a-8359-297797233f5b
 md"""Largo de la placa $L$ [$m$]:"""
@@ -273,22 +279,18 @@ hᵦ = trunc(h_conv(v,banco,air,T), digits = 1)
 # ╟─4a3f428e-a326-4b0d-b9fd-5c0d377f8088
 # ╟─3f425661-daab-4d08-963d-e98d8abf092c
 # ╟─af8579a4-f284-40ed-8782-dd8064b86cdd
-# ╟─98860479-b9fe-4517-8ead-fd472584c7ec
-# ╟─cbc04dfd-cf6a-4a9b-b130-6588c2744abe
 # ╟─e0368060-f709-4c49-bcab-7cfc0343c912
 # ╟─1a999f12-d7cd-4463-8864-34a8367ff92c
 # ╟─2cd928c7-3b9f-4bc1-9c68-a23af7a8f4d1
 # ╟─8ba59a86-3263-4f5e-8825-e72c096f83bd
-# ╟─58068069-b5f0-4ba6-8fd3-a7498823599f
-# ╟─efd1c14e-1076-472a-b2b1-3db5df31251f
-# ╟─d3441c74-19e7-4dea-939c-480b29b9fa3e
-# ╟─b255992c-2038-4e74-904d-aea7deeed64b
+# ╟─99b62194-d298-41bd-b5b5-eb8c63f809ff
+# ╟─ae55a9b9-8250-4e03-a1bd-9d454f4d5651
 # ╟─b7f596c7-4bce-493a-8359-297797233f5b
 # ╟─ca197510-73c9-4629-b1f1-55d603c9a00c
 # ╟─d8ca76b4-7289-4f9e-a838-34cc009a3a7b
 # ╟─72275dc6-518d-4574-a5de-d9a584a646b5
 # ╟─48416af6-5f8a-4bbe-b949-84c0f80c163f
-# ╟─b5741bdd-e14c-4e79-adeb-2c50d8626ebf
+# ╠═b5741bdd-e14c-4e79-adeb-2c50d8626ebf
 # ╟─90b8271b-8878-4341-a80f-3c09e40f5348
 # ╟─fc57526a-180d-40a3-aa8f-53d7f5ddbccf
 # ╟─a2088b4e-e7a2-431c-aba0-51ef82b4f6b6
